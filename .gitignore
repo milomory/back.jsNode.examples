@@ -131,4 +131,5 @@ dist
 
 .webstorm
 .idea
+.vscode
 .env
