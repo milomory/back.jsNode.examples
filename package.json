@@ -8,5 +8,8 @@
     "start": "node index.js"
   },
   "author": "mil",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.3.1"
+  }
 }

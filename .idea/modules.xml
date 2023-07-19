@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/back.jsNode.exsamples.iml" filepath="$PROJECT_DIR$/.idea/back.jsNode.exsamples.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/back.jsNode.examples.iml" filepath="$PROJECT_DIR$/.idea/back.jsNode.examples.iml" />
     </modules>
   </component>
 </project>

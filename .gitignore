@@ -130,6 +130,6 @@ dist
 .pnp.*
 
 .webstorm
-.idea
+.idea/*
 .vscode
 .env

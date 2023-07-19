@@ -1,5 +1,4 @@
-console.log('index start');
+console.log('index by back.jsnode.examples start');
 
-//require('./app/app');
-//require('./counter.app/app');
-//require('./app_open_api_by_ts');
+require('./apps/robot.binance.jsnode/app/index')
+
