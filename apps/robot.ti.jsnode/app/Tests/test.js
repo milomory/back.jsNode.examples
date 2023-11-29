@@ -1,5 +1,5 @@
 
-const tiENV = require('../env').getENV()
+
 const axios = require('axios');
 
 const cid = () => {
