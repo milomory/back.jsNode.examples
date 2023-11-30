@@ -10,7 +10,7 @@ exports.get = (env, accountId) => {
         accountId
     };
     (async () => {
-        const accounts = await require('../Service/service').request(method, url, headers, data);
-        console.log (accounts.data)
+        const response = await require('../../service').request(method, url, headers, data);
+        console.log (response.data)
     })()
 }

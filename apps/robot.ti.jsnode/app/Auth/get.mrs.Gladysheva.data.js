@@ -3,7 +3,7 @@ const axios = require('axios');
 const baseUrl = 'https://www.tinkoff.ru'
 const profile = 'da512a0c-fa0f-4313-9840-b1753eaf809a'
 const limit = 10
-const sessionId = 't.uQOjgMNTCt39dD0IqOwYBIphu6cVwpAtPUQHuRHhPj6IYjTVpZECMhD_ujtO9qSMOJ5XX9ifa6ikJrkRKI3law'
+const sessionId = '6zqW15lgQW4hGBDTp1L1FMaOXYvZgcRL.ix-prod-api66'
 
 axios.get(baseUrl+'/api/invest-gw/social/v1/profile/' + profile + '/instrument?limit=' + limit + '&sessionId=' + sessionId)
 .then(response => {

@@ -17,7 +17,7 @@ exports.post = (env, figi, quantity, price, direction, accountId, orderType, ord
         instrumentId
     };
     (async () => {
-        const accounts = await require('../Service/service').request(method, url, headers, data);
-        console.log (accounts.data)
+        const response = await require('../../service').request(method, url, headers, data);
+        console.log (response.data)
     })()
 }

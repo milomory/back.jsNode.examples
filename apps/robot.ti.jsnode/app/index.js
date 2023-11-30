@@ -1,6 +1,6 @@
 
 
-require('./investAPI/index')
+require('./investAPI/index').run().then()
 
-//require('./Tests/index')
+//require('./Auth/index')
 
