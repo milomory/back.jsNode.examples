@@ -1,37 +1,15 @@
-//import {getENV} from '../env'
-
-
-//const    env = require('../env').getENV()
-
-// enum DIRECTION {
-//     BUY = '1',
-//     SELL = '2'
-// }
-
-class fff {
-    f = 0
-    d = 0
-    constructor() {
-        this.f=3
-        this.d=5
-    }
-    async x(x,y) {
-        this.f=x
-        this.d=y
-        return this.f+this.d
-    }
-}
 
 exports.run = async () => {
 
     console.log(new fff().d)
-
     console.log(await new fff().x(1,2))
 
     const res = await require('./UsersService/getAccounts').get()
+
     //const accountId = '2002465405'; //main
     //const accountId = '2054310628'; // 4
     //const currency = 'RUB'
+
     //const res = await require('./OperationsService/getPortfolio').get(accountId, currency)
 
     //const res = await require('./OperationsService/getPositions').get(accountId)

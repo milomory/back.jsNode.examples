@@ -1,16 +1,11 @@
-exports.get = (env, accountId) => {
+exports.get = (accountId) => {
     const method = 'post';
     const url = 'https://invest-public-api.tinkoff.ru/rest/tinkoff.public.invest.api.contract.v1.StopOrdersService/GetStopOrders';
-    const headers = {
-        'accept': 'application/json',
-        'Authorization':`Bearer ${env.INVEST_TOKEN}`,
-        'Content-Type': 'application/json'
-    };
     const data = {
         accountId
     };
     (async () => {
-        const response = await require('../../service').request(method, url, headers, data);
+        const response = await require('../../service').investApiRequest(method, url, null, data);
         console.log (response.data)
     })()
 }

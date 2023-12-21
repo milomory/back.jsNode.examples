@@ -1,11 +1,6 @@
-exports.post = (env, figi, quantity, price, direction, accountId, orderType, orderId, instrumentId) => {
+exports.post = (figi, quantity, price, direction, accountId, orderType, orderId, instrumentId) => {
     const method = 'post';
     const url = 'https://invest-public-api.tinkoff.ru/rest/tinkoff.public.invest.api.contract.v1.OrdersService/PostOrder';
-    const headers = {
-        'accept': 'application/json',
-        'Authorization':`Bearer ${env.INVEST_TOKEN}`,
-        'Content-Type': 'application/json'
-    };
     const data = {
         figi,
         quantity,
@@ -17,7 +12,7 @@ exports.post = (env, figi, quantity, price, direction, accountId, orderType, ord
         instrumentId
     };
     (async () => {
-        const response = await require('../../service').request(method, url, headers, data);
+        const response = await require('../../service').investApiRequest(method, url, null, data);
         console.log (response.data)
     })()
 }
