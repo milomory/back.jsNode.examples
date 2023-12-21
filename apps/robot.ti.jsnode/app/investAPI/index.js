@@ -1,20 +1,19 @@
 
 exports.run = async () => {
 
-    console.log(new fff().d)
-    console.log(await new fff().x(1,2))
+    const res = []
 
-    const res = await require('./UsersService/getAccounts').get()
+    res[0] = await require('./UsersService/getAccounts').get()
 
-    //const accountId = '2002465405'; //main
-    //const accountId = '2054310628'; // 4
-    //const currency = 'RUB'
+    const accountId = '2002465405';     // 1 (main)
+    //const accountId = '2054310628';   // 4 (empty)
+    const currency = 'RUB'
 
-    //const res = await require('./OperationsService/getPortfolio').get(accountId, currency)
+    res[1] = await require('./OperationsService/getPortfolio').get(accountId, currency)
 
-    //const res = await require('./OperationsService/getPositions').get(accountId)
-    //const res = await require('./StopOrdersService/getStopOrders').get(accountId)
-    //const res = await require('./OrdersService/getOrders').get(accountId)
+    res[2] = await require('./OperationsService/getPositions').get(accountId)
+    res[3] = await require('./StopOrdersService/getStopOrders').get(accountId)
+    res[4] = await require('./OrdersService/getOrders').get(accountId)
 
     const figi = "BBG004S683W7";
     const quantity = "1";
@@ -26,6 +25,6 @@ exports.run = async () => {
     const orderType = "2";
     const orderId = Date.now();
     const instrumentId = ""; //"1c69e020-f3b1-455c-affa-45f8b8049234"; //figi = "BBG004S683W7";
-    //const res = await require('./OrdersService/postOrder').post(figi, quantity, price, direction, accountId, orderType, orderId, instrumentId)
+    //res[5] = await require('./OrdersService/postOrder').post(figi, quantity, price, direction, accountId, orderType, orderId, instrumentId)
     console.log(res)
 }

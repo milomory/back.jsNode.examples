@@ -11,5 +11,10 @@ exports.getOrders = async () => {
     }
     const actions = await require('./instruments').getActionsByInstrument(profile, 1, instrument)
     console.log(actions.data.payload.items[0])
+    const action = actions.data.payload.items[0].action
+    //(actions.data.payload.items[0].action)
+
+    const res = await require('../investAPI/UsersService/getAccounts').get()
+    console.log(res)
 }
 
