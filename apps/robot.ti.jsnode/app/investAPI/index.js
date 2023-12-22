@@ -10,7 +10,6 @@ exports.run = async () => {
     const currency = 'RUB'
 
     res[1] = await require('./OperationsService/getPortfolio').get(accountId, currency)
-
     res[2] = await require('./OperationsService/getPositions').get(accountId)
     res[3] = await require('./StopOrdersService/getStopOrders').get(accountId)
     res[4] = await require('./OrdersService/getOrders').get(accountId)
