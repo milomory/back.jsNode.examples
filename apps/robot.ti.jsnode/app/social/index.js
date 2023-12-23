@@ -12,13 +12,16 @@ const profile = profiles.Heraclide
 // Файл с логикой гадо из папки социал в куда-то где не здесь
 exports.runLogic = async (psid) => {
 
+    console.log("runLogic")
     const orderList = await require('./instruments').getInstrumentList(psid, profile, 100)
-
+    //console.log(orderList)
     // ===============================
-    // Выбираем только егодняшние оредеры
+    // Выбираем только сегодняшние оредеры
     // ===============================
+    const toDay = new Date().toISOString().slice(0, 10)
+    console.log("Сегодня: " + toDay)
     for (let [i, order] of orderList.entries()) {
-        if ((order.statistics.maxTradeDateTime.slice(0, 10)) === (new Date().toISOString().slice(0, 10)) &&
+        if ((order.statistics.maxTradeDateTime.slice(0, 10)) === (toDay) &&
             (order.type == 'share') && (order.currency == 'rub')) {
             console.log("Что-то есть")
             console.log(order)
@@ -34,6 +37,7 @@ exports.runLogic = async (psid) => {
             // ===============================
             // Выбираем по И-тому ордеру всего его акшины
             // ===============================
+            console.log("Выбираем по И-тому ордеру всего его акшины")
             const actions = await require('./instruments').getActionsByInstrument(psid, profile, 1, order)
             // ===============================
             // Выводим все акшины по И-тому одеру, но т.к. у нас лимит стоит 1,
@@ -100,17 +104,17 @@ exports.runLogic = async (psid) => {
                 console.log("Система говорит => Пробуем взять: (ticker: " + order.ticker + ", classCode: " + order.classCode + ")")
 
                 const sharesBy = await require('../investAPI/InstrumentsService/sharesBy').get('INSTRUMENT_ID_TYPE_TICKER', order.classCode, order.ticker)
-                const finedFigi = sharesBy.instrument.figi
+                const figi = sharesBy.instrument.figi
                 //console.log(figi)
 
                 let isPosition = false
                 for (let [i, position] of positions.entries()) {
                     //console.log(position.figi)
-                    if (finedFigi == position.figi) {
-                        console.log("Гоблин говорит => Такая пиченька у меня уже есть: " + finedFigi)
+                    if (figi == position.figi) {
+                        console.log("Гоблин говорит => Такая пиченька у меня уже есть: " + figi)
                         isPosition = true
                     } else {
-                        console.log("[Сравнение с " + i + "-й позицией] Гоблин говорит => Неодинаковые пиченьки (" + finedFigi + " и " + position.figi + "), надо брать!")
+                        console.log("[Сравнение с " + i + "-й позицией] Гоблин говорит => Неодинаковые пиченьки (" + figi + " и " + position.figi + "), надо брать!")
                     }
                 }
                 console.log ('Гоблин говорит => Пиченька стоит: ' + lastAction.averagePrice)
@@ -122,7 +126,18 @@ exports.runLogic = async (psid) => {
                         // ===============================
                         // Покупка
                         // ===============================
-                        // ...
+                        const quantity = "1"
+                        const price = {
+                            "nano": 1,
+                            "units": "36"
+                        };
+                        //const direction = DIRECTION.SELL // Направление операции. 1 - buy, 2 - sell
+                        const orderType = "1";
+                        const orderId = Date.now();
+                        const instrumentId = ""; //"1c69e020-f3b1-455c-affa-45f8b8049234"; //figi = "BBG004S683W7";
+                        const postOrder = await require('../investAPI/OrdersService/postOrder')
+                            .post(figi, quantity, price, direction, accountId, orderType, orderId, instrumentId)
+                        console.log (postOrder)
                         console.log ('Система говорит => Покуплено, ура!')
                     }
                 } else {
@@ -135,18 +150,19 @@ exports.runLogic = async (psid) => {
             if (lastAction.action == 'sell') {
                 // Проверка на то, что у меня есть хотя бы одна такая пиченька
                 console.log("Пробуем продать: (ticker: " + order.ticker + ", classCode: " + order.classCode + ")")
-                const sharesBy = await require('../investAPI/InstrumentsService/sharesBy').get('INSTRUMENT_ID_TYPE_TICKER', order.classCode, order.ticker)
-                const finedFigi = sharesBy.instrument.figi
+                const sharesBy = await require('../investAPI/InstrumentsService/sharesBy')
+                    .get('INSTRUMENT_ID_TYPE_TICKER', order.classCode, order.ticker)
+                const figi = sharesBy.instrument.figi
                 //console.log(figi)
 
                 let isPosition = false
                 for (let [i, position] of positions.entries()) {
                     //console.log(position.figi)
-                    if (finedFigi == position.figi) {
-                        console.log("Гоблин говорит => Такая пиченька у меня уже есть: " + finedFigi)
+                    if (figi == position.figi) {
+                        console.log("Гоблин говорит => Такая пиченька у меня уже есть: " + figi)
                         isPosition = true
                     } else {
-                        console.log("[Сравнение с " + i + "-й позицией] Гоблин говорит => Неодинаковые пиченьки (" + finedFigi + " и " + position.figi + "), еще подержу!")
+                        console.log("[Сравнение с " + i + "-й позицией] Гоблин говорит => Неодинаковые пиченьки (" + figi + " и " + position.figi + "), еще подержу!")
                     }
                 }
                 if (isPosition == true) {
@@ -154,9 +170,22 @@ exports.runLogic = async (psid) => {
                     // ===============================
                     // Продажа
                     // ===============================
-                    // ...
+                    const quantity = "1"
+                    const price = {
+                        "nano": 1,
+                        "units": "36"
+                    };
+                    //const direction = DIRECTION.SELL // Направление операции. 1 - buy, 2 - sell
+                    const orderType = "2";
+                    const orderId = Date.now();
+                    const instrumentId = ""; //"1c69e020-f3b1-455c-affa-45f8b8049234"; //figi = "BBG004S683W7";
+                    const postOrder = await require('../investAPI/OrdersService/postOrder')
+                        .post(figi, quantity, price, direction, accountId, orderType, orderId, instrumentId)
+                    console.log (postOrder)
                     console.log ('Система говорит => Попродано, ура!')
                     console.log ('Гоблин говорит => Это же все шо нажито, непосильно...!')
+                } else {
+                    console.log("Гоблин говорит => Нечего продавать, остальное подержу!")
                 }
             }
         }
