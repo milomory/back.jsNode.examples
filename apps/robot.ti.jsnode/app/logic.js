@@ -7,19 +7,19 @@ const profiles = {
     Heraclide: '30e4077e-855e-4488-b600-7ceb9bc5161a'
 };
 
-const profile = profiles.Heraclide
+const profile = profiles.Gladyshva
 
 // Файл с логикой гадо из папки социал в куда-то где не здесь
 exports.runLogic = async (psid) => {
 
     console.log("runLogic")
-    const orderList = await require('./instruments').getInstrumentList(psid, profile, 100)
+    const orderList = await require('./social/instruments').getInstrumentList(psid, profile, 100)
     //console.log(orderList)
     // ===============================
     // Выбираем только сегодняшние оредеры
     // ===============================
     const toDay = new Date().toISOString().slice(0, 10)
-    console.log("Сегодня: " + toDay)
+    console.log("Сегодня: " + toDay) // "2023-12-22"
     for (let [i, order] of orderList.entries()) {
         if ((order.statistics.maxTradeDateTime.slice(0, 10)) === (toDay) &&
             (order.type == 'share') && (order.currency == 'rub')) {
@@ -38,7 +38,7 @@ exports.runLogic = async (psid) => {
             // Выбираем по И-тому ордеру всего его акшины
             // ===============================
             console.log("Выбираем по И-тому ордеру всего его акшины")
-            const actions = await require('./instruments').getActionsByInstrument(psid, profile, 1, order)
+            const actions = await require('./social/instruments').getActionsByInstrument(psid, profile, 1, order)
             // ===============================
             // Выводим все акшины по И-тому одеру, но т.к. у нас лимит стоит 1,
             // то мы получаем сразу последний
@@ -59,14 +59,14 @@ exports.runLogic = async (psid) => {
             // ===============================
             // Достаем ИД аккаунта (последнего), созданного для этого всего
             // ===============================
-            accounts = await require('../investAPI/UsersService/getAccounts').get()
+            accounts = await require('./investAPI/UsersService/getAccounts').get()
             const account = accounts.accounts[accounts.accounts.length-1]
             const accountId = account.id
             const currency = 'RUB'
             // ===============================
             // Пихаем этот ИД и карренси, чтобы потом посмотреть, что там внутри вообще есть рублевого
             // ===============================
-            portfolio = await require('../investAPI/OperationsService/getPortfolio').get(accountId, currency)
+            portfolio = await require('./investAPI/OperationsService/getPortfolio').get(accountId, currency)
             // ===============================
             // Достаем количество свободного бабла в рублях
             // ===============================
@@ -103,7 +103,7 @@ exports.runLogic = async (psid) => {
                 // и на то, что у меня еще нет такого лота
                 console.log("Система говорит => Пробуем взять: (ticker: " + order.ticker + ", classCode: " + order.classCode + ")")
 
-                const sharesBy = await require('../investAPI/InstrumentsService/sharesBy').get('INSTRUMENT_ID_TYPE_TICKER', order.classCode, order.ticker)
+                const sharesBy = await require('./investAPI/InstrumentsService/sharesBy').get('INSTRUMENT_ID_TYPE_TICKER', order.classCode, order.ticker)
                 const figi = sharesBy.instrument.figi
                 //console.log(figi)
 
@@ -131,13 +131,13 @@ exports.runLogic = async (psid) => {
                             "nano": 1,
                             "units": "36"
                         };
-                        //const direction = DIRECTION.SELL // Направление операции. 1 - buy, 2 - sell
+                        const direction = "1" // DIRECTION.BUY // Направление операции. 1 - buy, 2 - sell
                         const orderType = "1";
                         const orderId = Date.now();
                         const instrumentId = ""; //"1c69e020-f3b1-455c-affa-45f8b8049234"; //figi = "BBG004S683W7";
-                        const postOrder = await require('../investAPI/OrdersService/postOrder')
+                        const postOrder = await require('./investAPI/OrdersService/postOrder')
                             .post(figi, quantity, price, direction, accountId, orderType, orderId, instrumentId)
-                        console.log (postOrder)
+                        //console.log (postOrder)
                         console.log ('Система говорит => Покуплено, ура!')
                     }
                 } else {
@@ -150,11 +150,10 @@ exports.runLogic = async (psid) => {
             if (lastAction.action == 'sell') {
                 // Проверка на то, что у меня есть хотя бы одна такая пиченька
                 console.log("Пробуем продать: (ticker: " + order.ticker + ", classCode: " + order.classCode + ")")
-                const sharesBy = await require('../investAPI/InstrumentsService/sharesBy')
+                const sharesBy = await require('./investAPI/InstrumentsService/sharesBy')
                     .get('INSTRUMENT_ID_TYPE_TICKER', order.classCode, order.ticker)
                 const figi = sharesBy.instrument.figi
                 //console.log(figi)
-
                 let isPosition = false
                 for (let [i, position] of positions.entries()) {
                     //console.log(position.figi)
@@ -175,11 +174,11 @@ exports.runLogic = async (psid) => {
                         "nano": 1,
                         "units": "36"
                     };
-                    //const direction = DIRECTION.SELL // Направление операции. 1 - buy, 2 - sell
+                    const direction = "2" // DIRECTION.BUY // Направление операции. 1 - buy, 2 - sell
                     const orderType = "2";
                     const orderId = Date.now();
                     const instrumentId = ""; //"1c69e020-f3b1-455c-affa-45f8b8049234"; //figi = "BBG004S683W7";
-                    const postOrder = await require('../investAPI/OrdersService/postOrder')
+                    const postOrder = await require('./investAPI/OrdersService/postOrder')
                         .post(figi, quantity, price, direction, accountId, orderType, orderId, instrumentId)
                     console.log (postOrder)
                     console.log ('Система говорит => Попродано, ура!')

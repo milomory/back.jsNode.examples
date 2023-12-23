@@ -6,6 +6,6 @@ exports.get = async (idType, classCode, id) => {
         classCode,
         id
     };
-    const response = await require('../../service').investApiRequest(method, url, null, data);
+    const response = await require('../../service').request(method, url, null, data);
     return response.data
 }

@@ -11,14 +11,6 @@ exports.post = async (figi, quantity, price, direction, accountId, orderType, or
         orderId,
         instrumentId
     };
-    const response = await require('../../service').investApiRequest(method, url, null, data);
+    const response = await require('../../service').request(method, url, null, data);
     return response.data
 }
-
-// try {
-//     const response = await require('../../service').investApiRequest(method, url, null, data);
-//     return response.data;
-// } catch (error) {
-//     console.error('Error:', error.message);
-//     throw error;
-// }

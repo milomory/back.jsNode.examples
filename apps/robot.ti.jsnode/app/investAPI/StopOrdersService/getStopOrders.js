@@ -5,7 +5,7 @@ exports.get = (accountId) => {
         accountId
     };
     (async () => {
-        const response = await require('../../service').investApiRequest(method, url, null, data);
+        const response = await require('../../service').request(method, url, null, data);
         console.log (response.data)
     })()
 }
