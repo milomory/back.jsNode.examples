@@ -67,7 +67,7 @@ exports.executeOrder = async (lastSocialLots) => {
                     "надо посмотреть, что с ней делали... Ого, признак (" + lastSocialLot.action + ")!")
 
                 // ===============================
-                // Ниибический костыль, делаем еще массив и пихаем все, что не сошлось
+                // Ниибический костыль, делаем еще массив и пихаем все, что есть не у меня и чего у меня нет
                 // ===============================
                 lotsNotHaveMyProfile.push(lastSocialLot)
 
@@ -112,6 +112,12 @@ exports.executeOrder = async (lastSocialLots) => {
 
 
             //... ()
+            const postOrder = await require('../service/postOrder.service').postOrderService({
+                lotHaveMyProfile,
+                direction: "1",
+                account
+            })
+            console.log(postOrder)
 
 
 
@@ -172,6 +178,12 @@ exports.executeOrder = async (lastSocialLots) => {
 
 
                 //... ()
+                const postOrder = await require('../service/postOrder.service').postOrderService({
+                    lotNotHaveMyProfile,
+                    direction: "2",
+                    account
+                })
+                console.log(postOrder)
 
 
 
