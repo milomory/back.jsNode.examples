@@ -80,7 +80,7 @@ exports.executeOrder = async (lastSocialLots) => {
     // Нормализуем ниибический костыль в виде массива с тем,
     // что сошлось, что можно попродавать, если там САЛЕ
     // ===============================
-    console.log('lotsHaveMyProfile')
+    // console.log('lotsHaveMyProfile')
     let uniqueArrayLotsHaveMyProfile = lotsHaveMyProfile.filter((obj, index, self) =>
             index === self.findIndex((t) => (
                 t.uid === obj.uid && t.figi === obj.figi
@@ -92,7 +92,7 @@ exports.executeOrder = async (lastSocialLots) => {
     // что сошлось, что можно попродавать, если там САЛЕ
     // ===============================
     for (let [i, lotHaveMyProfile] of uniqueArrayLotsHaveMyProfile.entries()) {
-        console.log(lotHaveMyProfile)
+        // console.log(lotHaveMyProfile)
 
         //...
 
@@ -100,7 +100,7 @@ exports.executeOrder = async (lastSocialLots) => {
         // Условие, если ее 'sell'
         // ===============================
         if (lotHaveMyProfile.action === 'sell') {
-            message.push('Ее продали, значит и мне она не нужна! Продаем: ' + lotHaveMyProfile.ticker)
+            message.push("Ее продали, значит и мне она не нужна! Продаем: [" + i + "] " + lotHaveMyProfile.ticker)
             // console.log (message);
 
             // ===============================
@@ -114,9 +114,10 @@ exports.executeOrder = async (lastSocialLots) => {
             //... ()
             const postOrder = await require('../service/postOrder.service').postOrderService({
                 lotHaveMyProfile,
-                direction: "1",
+                direction: "2",
                 account
             })
+            console.log('Функция продажи')
             console.log(postOrder)
 
 
@@ -133,7 +134,7 @@ exports.executeOrder = async (lastSocialLots) => {
     // Нормализуем ниибический костыль в виде массива с тем,
     // что не сошлось, что можно напокупать, если там БУЙ
     // ===============================
-    console.log('lotsNotHaveMyProfile')
+    // console.log('lotsNotHaveMyProfile')
     let uniqueArrayLotsNotHaveMyProfile = lotsNotHaveMyProfile.filter((obj, index, self) =>
             index === self.findIndex((t) => (
                 t.uid === obj.uid && t.figi === obj.figi
@@ -145,7 +146,7 @@ exports.executeOrder = async (lastSocialLots) => {
     // что не сошлось, что можно попродавать, если там САЛЕ
     // ===============================
     for (let [i, lotNotHaveMyProfile] of uniqueArrayLotsNotHaveMyProfile.entries()) {
-        console.log(lotNotHaveMyProfile)
+        // console.log(lotNotHaveMyProfile)
 
         //...
 
@@ -156,7 +157,7 @@ exports.executeOrder = async (lastSocialLots) => {
             message.push(
                 //"[Сравнение чьей-то " + i + "-й позиции с моей " + j + "-й позицией] " +
                 "Гоблин говорит => Так-так-так! Ее купили, значит в ней может быть что-то ценное. " +
-                "Давай посмотрим, а хватит ли нам денег в казне для покупки: " + lotNotHaveMyProfile.ticker)
+                "Давай посмотрим, а хватит ли нам денег в казне для покупки: [" + i + "] " + lotNotHaveMyProfile.ticker)
 
 
             // ===============================
@@ -168,7 +169,7 @@ exports.executeOrder = async (lastSocialLots) => {
                     "Гоблин говорит => Вот моя печенька: " + lotNotHaveMyProfile.ticker + ", " +
                     //"она не такая, как эта: " + lastSocialLot.ticker + ". " +
                     //"Они неодинаковые, следовательно" +
-                    " надо брать! " +
+                    "надо брать! " +
                     "У меня есть: " + amountByPortfolio.totalAmountCurrencies.units + " рублей, " +
                     "печенька стоит: " + lotNotHaveMyProfile.cost + " рублей! Золота хватит, берем!")
 
@@ -184,16 +185,17 @@ exports.executeOrder = async (lastSocialLots) => {
                 //... ()
                 const postOrder = await require('../service/postOrder.service').postOrderService({
                     lotNotHaveMyProfile,
-                    direction: "2",
+                    direction: "1",
                     account
                 })
+                console.log('Функция покупки')
                 console.log(postOrder)
 
 
 
 
                 message.push("Система говорит => Покуплено, ура!")
-                console.log (message);
+
             } else {
                 message.push(
                     //"[Сравнение чьей-то " + i + "-й позиции с моей " + j + "-й позицией] " +
@@ -202,7 +204,7 @@ exports.executeOrder = async (lastSocialLots) => {
                     "печенька: " + lotNotHaveMyProfile.figi + ", " +
                     //"она не такая, как эта: " + lastSocialLot.figi + ". " +
                     //"Они неодинаковые," +
-                    " надо брать! " +
+                    "надо брать! " +
                     "У меня есть: " + amountByPortfolio.totalAmountCurrencies.units + " рублей, " +
                     "печенька стоит: " + lotNotHaveMyProfile.cost + " рублей! Нужно больше золота!")
 
