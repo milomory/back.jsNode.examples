@@ -2,9 +2,17 @@
 exports.psid = async (psid) => {
     if (psid) {
         console.log("This is my PSID: " + psid)
+
+        // ===============================
+        // Начинаем работать с Social-Api
+        // ===============================
         const lastSocialLots = await require('./instrument.service').profile(psid)
-        console.log(lastSocialLots)
-        //...
+
+        // ===============================
+        // Начинаем работать с ИНВЕСТ-АПИ
+        // ===============================
+        await require('../service/executeOrder.service').executeOrder(lastSocialLots)
+
     }
 }
 

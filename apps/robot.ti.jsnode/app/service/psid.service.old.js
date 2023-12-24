@@ -76,7 +76,7 @@ exports.psid = async (psid) => {
             // ===============================
             // Пихаем этот ИД и карренси, чтобы потом посмотреть, что там внутри вообще есть рублевого
             // ===============================
-            portfolio = await require('../invest.api/operationsService/getPortfolio').get({accountId, currency})
+            const portfolio = await require('../invest.api/operationsService/getPortfolio').get({accountId, currency})
             // ===============================
             // Достаем количество свободного бабла в рублях
             // ===============================

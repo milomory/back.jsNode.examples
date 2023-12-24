@@ -13,7 +13,7 @@ exports.profile = async (psid) => {
                     const orderList = await require('../social/instruments').getInstrumentList({
                         psid,
                         profileUid: profile.uid,
-                        limit:      10 // очень важный параметр, тиньков будет отбивать
+                        limit:      5 // очень важный параметр, тиньков будет отбивать
                     })
                     // ===============================
                     // Выбираем только сегодняшние оредеры
