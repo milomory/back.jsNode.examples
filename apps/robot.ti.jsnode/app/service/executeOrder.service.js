@@ -80,7 +80,7 @@ exports.executeOrder = async (lastSocialLots) => {
     // Нормализуем ниибический костыль в виде массива с тем,
     // что сошлось, что можно попродавать, если там САЛЕ
     // ===============================
-    // console.log('lotsHaveMyProfile')
+    console.log('lotsHaveMyProfile')
     let uniqueArrayLotsHaveMyProfile = lotsHaveMyProfile.filter((obj, index, self) =>
             index === self.findIndex((t) => (
                 t.uid === obj.uid && t.figi === obj.figi
@@ -92,7 +92,7 @@ exports.executeOrder = async (lastSocialLots) => {
     // что сошлось, что можно попродавать, если там САЛЕ
     // ===============================
     for (let [i, lotHaveMyProfile] of uniqueArrayLotsHaveMyProfile.entries()) {
-        // console.log(lotHaveMyProfile)
+        console.log(lotHaveMyProfile)
 
         //...
 
@@ -100,7 +100,7 @@ exports.executeOrder = async (lastSocialLots) => {
         // Условие, если ее 'sell'
         // ===============================
         if (lotHaveMyProfile.action === 'sell') {
-            message = 'Ее продали, значит и мне она не нужна! Продаем: ' + lotHaveMyProfile.ticker
+            message.push('Ее продали, значит и мне она не нужна! Продаем: ' + lotHaveMyProfile.ticker)
             // console.log (message);
 
             // ===============================
@@ -121,11 +121,11 @@ exports.executeOrder = async (lastSocialLots) => {
 
 
 
-            message = 'Система говорит => Продано, ура!' + lotHaveMyProfile.ticker
-            // console.log (message);
+            message.push('Система говорит => Продано, ура!' + lotHaveMyProfile.ticker)
+
         } else { // lastSocialLot.action != 'sell' => 'buy'
-            message = 'Ее купили, но у меня она уже есть! Пусть еще побудет: ' + lotHaveMyProfile.ticker
-            // console.log (message);
+            message.push('Ее купили, но у меня она уже есть! Пусть еще побудет: ' + lotHaveMyProfile.ticker)
+
         }
     }
 
@@ -133,15 +133,19 @@ exports.executeOrder = async (lastSocialLots) => {
     // Нормализуем ниибический костыль в виде массива с тем,
     // что не сошлось, что можно напокупать, если там БУЙ
     // ===============================
-    // console.log('lotsNotHaveMyProfile')
+    console.log('lotsNotHaveMyProfile')
     let uniqueArrayLotsNotHaveMyProfile = lotsNotHaveMyProfile.filter((obj, index, self) =>
             index === self.findIndex((t) => (
                 t.uid === obj.uid && t.figi === obj.figi
             ))
     );
 
+    // ===============================
+    // Идем по нормализованному говну ниибического костыля в виде массива с тем,
+    // что не сошлось, что можно попродавать, если там САЛЕ
+    // ===============================
     for (let [i, lotNotHaveMyProfile] of uniqueArrayLotsNotHaveMyProfile.entries()) {
-        // console.log(lotNotHaveMyProfile)
+        console.log(lotNotHaveMyProfile)
 
         //...
 
@@ -149,25 +153,25 @@ exports.executeOrder = async (lastSocialLots) => {
         // Условие, если 'buy'
         // ===============================
         if (lotNotHaveMyProfile.action === 'buy') {
-            message =
+            message.push(
                 //"[Сравнение чьей-то " + i + "-й позиции с моей " + j + "-й позицией] " +
                 "Гоблин говорит => Так-так-так! Ее купили, значит в ней может быть что-то ценное. " +
-                "Давай посмотрим, а хватит ли нам денег в казне для покупки: " + lotNotHaveMyProfile.ticker
-            // console.log (message);
+                "Давай посмотрим, а хватит ли нам денег в казне для покупки: " + lotNotHaveMyProfile.ticker)
+
 
             // ===============================
             // Проверка на то, что у меня есть на что покупать
             // ===============================
             if (lotNotHaveMyProfile.cost <= amountByPortfolio.totalAmountCurrencies.units) {
-                message =
+                message.push(
                     //"[Сравнение чьей-то " + i + "-й позиции с моей " + j + "-й позицией] " +
                     "Гоблин говорит => Вот моя печенька: " + lotNotHaveMyProfile.ticker + ", " +
                     //"она не такая, как эта: " + lastSocialLot.ticker + ". " +
                     //"Они неодинаковые, следовательно" +
                     " надо брать! " +
                     "У меня есть: " + amountByPortfolio.totalAmountCurrencies.units + " рублей, " +
-                    "печенька стоит: " + lotNotHaveMyProfile.cost + " рублей! Золота хватит, берем!";
-                // console.log (message);
+                    "печенька стоит: " + lotNotHaveMyProfile.cost + " рублей! Золота хватит, берем!")
+
 
                 // ===============================
                 // Функция покупки
@@ -188,10 +192,10 @@ exports.executeOrder = async (lastSocialLots) => {
 
 
 
-                message ="Система говорит => Покуплено, ура!"
+                message.push("Система говорит => Покуплено, ура!")
                 console.log (message);
             } else {
-                message =
+                message.push(
                     //"[Сравнение чьей-то " + i + "-й позиции с моей " + j + "-й позицией] " +
                     "Гоблин говорит => Вот " +
                     // j + "-ая моя " +
@@ -200,17 +204,17 @@ exports.executeOrder = async (lastSocialLots) => {
                     //"Они неодинаковые," +
                     " надо брать! " +
                     "У меня есть: " + amountByPortfolio.totalAmountCurrencies.units + " рублей, " +
-                    "печенька стоит: " + lotNotHaveMyProfile.cost + " рублей! Нужно больше золота!"
-                // console.log (message);
+                    "печенька стоит: " + lotNotHaveMyProfile.cost + " рублей! Нужно больше золота!")
+
             }
         } else {
             // lastSocialLot.action != 'buy' => 'sell'
-            message =
+            message.push(
                 //"[Сравнение чьей-то " + i + "-й позиции с моей " + j + "-й позицией] " +
                 "Гоблин говорит => Так-так-так! " +
                 "Ее продали, значит в ней нет ничего ценного. " +
-                "Значит и мне не нужна " + lotNotHaveMyProfile.ticker
-            console.log (message);
+                "Значит и мне не нужна " + lotNotHaveMyProfile.ticker)
+
         }
 
     }
