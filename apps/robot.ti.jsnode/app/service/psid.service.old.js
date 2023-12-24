@@ -211,3 +211,74 @@ exports.psid = async (psid) => {
 
 }
 
+
+
+
+
+// ===============================
+// Условие, если ее 'sell'
+// ===============================
+if (lastSocialLot.action === 'sell') {
+    message = 'Ее продали, значит и мне она не нужна! Продаем: ' + lastSocialLot.ticker
+    console.log (message);
+
+    // ===============================
+    // Функция продажи
+    // DIRECTION.BUY or DIRECTION.SELL
+    // Направление операции: 1-buy, 2-sell,
+    // ===============================
+
+    message = 'Система говорит => Продано, ура!' + lastSocialLot.ticker
+    console.log (message);
+} else { // lastSocialLot.action != 'sell' => 'buy'
+    message = 'Ее купили, но у меня она уже есть! Пусть еще побудет: ' + lastSocialLot.ticker
+    console.log (message);
+}
+
+
+// ===============================
+// Условие, если 'buy'
+// ===============================
+if (lastSocialLot.action === 'buy') {
+    message = "[Сравнение чьей-то " + i + "-й позиции с моей " + j + "-й позицией] " +
+        "Гоблин говорит => Так-так-так! Ее купили, значит в ней может быть что-то ценное. " +
+        "Давай посмотрим, а хватит ли нам денег в казне для покупки: " + lastSocialLot.ticker
+    console.log (message);
+
+    // ===============================
+    // Проверка на то, что у меня есть на что покупать
+    // ===============================
+    if (lastSocialLot.cost <= amountByPortfolio.totalAmountCurrencies.units) {
+        message = "[Сравнение чьей-то " + j + "-й позиции с моей " + j + "-й позицией] " +
+            "Гоблин говорит => Вот моя печенька: " + myLot.ticker + ", " +
+            "она не такая, как эта: " + lastSocialLot.ticker + ". " +
+            "Они неодинаковые, следовательно надо брать! " +
+            "У меня есть: " + amountByPortfolio.totalAmountCurrencies.units + " рублей, " +
+            "печенька стоит: " + lastSocialLot.cost + " рублей! Золота хватит, берем!";
+        console.log (message);
+
+        // ===============================
+        // Функция покупки
+        // DIRECTION.BUY or DIRECTION.SELL
+        // Направление операции: 1-buy, 2-sell,
+        // ===============================
+
+        message ="Система говорит => Покуплено, ура!"
+        console.log (message);
+    } else {
+        message = "[Сравнение чьей-то " + i + "-й позиции с моей " + j + "-й позицией] " +
+            "Гоблин говорит => Вот " + j + "-ая моя печенька: " + myLot.figi + ", " +
+            "она не такая, как эта: " + lastSocialLot.figi + ". " +
+            "Они неодинаковые, надо брать! " +
+            "У меня есть: " + amountByPortfolio.totalAmountCurrencies.units + " рублей, " +
+            "печенька стоит: " + lastSocialLot.cost + " рублей! Нужно больше золота!"
+        console.log (message);
+    }
+} else {
+    // lastSocialLot.action != 'buy' => 'sell'
+    message = "[Сравнение чьей-то " + i + "-й позиции с моей " + j + "-й позицией] " +
+        "Гоблин говорит => Так-так-так! " +
+        "Ее продали, значит в ней нет ничего ценного. " +
+        "Значит и мне не нужна" + lastSocialLot.ticker
+    console.log (message);
+}

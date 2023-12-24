@@ -8,6 +8,8 @@ exports.getInstrumentByPortfolio = async (account) => {
         accountId:  account.id,
         currency:   'RUB'
     })
+    //console.log(portfolio)
+
     const portfolioPositionsArr = []
     for (let [i, position] of portfolio.positions.entries()) {
         if (position.instrumentType === "share") {
@@ -16,6 +18,7 @@ exports.getInstrumentByPortfolio = async (account) => {
                 "instrumentKind": "INSTRUMENT_TYPE_SHARE",
                 "apiTradeAvailableFlag": true
             })
+            //console.log(findInstrument)
             portfolioPositionsArr.push(
                 {
                     figi:           findInstrument.instruments[0].figi,
