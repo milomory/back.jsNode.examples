@@ -4,8 +4,8 @@ exports.profile = async (psid) => {
         const instrumentArr = []
         const profiles = await require('../social/profiles').getProfile()
         if (profiles) {
-            //const toDay = new Date().toISOString().slice(0, 10)
-            const toDay = "2023-12-22"
+            const toDay = new Date().toISOString().slice(0, 10)
+            //const toDay = "2023-12-22"
             console.log("Сегодня: " + toDay)
             for (let [i, profile] of profiles.entries()) {
                 if (profile.pid !== 0) {
@@ -15,10 +15,27 @@ exports.profile = async (psid) => {
                         profileUid: profile.uid,
                         limit:      5 // очень важный параметр, тиньков будет отбивать
                     })
+
                     // ===============================
                     // Выбираем только сегодняшние оредеры
                     // ===============================
                     for (let [j, order] of orderList.entries()) {
+
+
+                        async function init() {
+                            console.log("20 sec...")
+                            await sleep(20*1000);
+                        }
+
+                        async function sleep(ms) {
+                            return new Promise((resolve) => {
+                                setTimeout(resolve, ms);
+                            });
+                        }
+
+                        await init()
+
+
                         if ((order.statistics.maxTradeDateTime.slice(0, 10)) === (toDay) &&
                             (order.type === 'share') && (order.currency === 'rub')) {
                             console.log("ticker: " + order.ticker + ", classCode: " + order.classCode)
@@ -37,13 +54,11 @@ exports.profile = async (psid) => {
                             // то мы получаем сразу последний
                             // ===============================
                             console.log("Action: " + actions[0].action + ", по цене: " + actions[0].averagePrice)
-
                             const sharesBy = await require('../invest.api/instrumentsService/sharesBy').get({
                                 idType:     "INSTRUMENT_ID_TYPE_TICKER",
                                 classCode:  order.classCode,
                                 id:         order.ticker
                             })
-
                             instrumentArr.push(
                                 {
                                     figi:           sharesBy.instrument.figi,           // sharesBy
