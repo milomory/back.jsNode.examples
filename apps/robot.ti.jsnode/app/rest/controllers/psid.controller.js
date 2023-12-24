@@ -4,7 +4,7 @@ const router = express.Router();
 router.get('/:psid', (req, res) => {
     const psid = req.params.psid;
     res.send({psid});
-    require('../../logic').runLogic(psid).then()
+    require('../../service/psid.service').psid(psid).then()
 });
 
 module.exports = router;

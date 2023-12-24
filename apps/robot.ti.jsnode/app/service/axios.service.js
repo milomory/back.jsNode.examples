@@ -1,5 +1,5 @@
 const axios = require('axios');
-const env = require('./env').getENV()
+const env = require('../env').getENV()
 
 exports.request = async (method, url, headers, data) => {
     if ((!headers) && (headers == null && headers == undefined)) {
