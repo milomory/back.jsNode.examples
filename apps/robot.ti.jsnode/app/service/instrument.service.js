@@ -21,20 +21,23 @@ exports.profile = async (psid) => {
                     // ===============================
                     for (let [j, order] of orderList.entries()) {
 
+                        if ((order.statistics.maxTradeDateTime.slice(0, 10)) === (toDay) &&
+                            (order.type === 'share') && (order.currency === 'rub')) {
+                            async function init(min, max) {
+                                const randomTime = (min, max) => Math.random() * (max - min) + min;
+                                const randomDuration = randomTime(min, max) * 1000;
+                                console.log((randomDuration / 1000) + " sec...")
+                                await sleep(randomDuration);
+                            }
 
-                        async function init() {
-                            console.log("10 sec...")
-                            await sleep(10*1000);
+                            async function sleep(ms) {
+                                return new Promise((resolve) => {
+                                    setTimeout(resolve, ms);
+                                });
+                            }
+
+                            await init(40, 60)
                         }
-
-                        async function sleep(ms) {
-                            return new Promise((resolve) => {
-                                setTimeout(resolve, ms);
-                            });
-                        }
-
-                        await init()
-
 
                         if ((order.statistics.maxTradeDateTime.slice(0, 10)) === (toDay) &&
                             (order.type === 'share') && (order.currency === 'rub')) {
@@ -54,6 +57,7 @@ exports.profile = async (psid) => {
                             // то мы получаем сразу последний
                             // ===============================
                             console.log("Action: " + actions[0].action + ", по цене: " + actions[0].averagePrice)
+                            console.log("===============================")
                             const sharesBy = await require('../invest.api/instrumentsService/sharesBy').get({
                                 idType:     "INSTRUMENT_ID_TYPE_TICKER",
                                 classCode:  order.classCode,
