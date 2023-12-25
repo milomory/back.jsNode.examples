@@ -23,8 +23,8 @@ exports.profile = async (psid) => {
 
 
                         async function init() {
-                            console.log("20 sec...")
-                            await sleep(20*1000);
+                            console.log("10 sec...")
+                            await sleep(10*1000);
                         }
 
                         async function sleep(ms) {
