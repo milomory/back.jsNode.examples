@@ -1,22 +1,45 @@
-exports.postOrderService = async (data) => {
+exports.postOrderServiceBuy = async (data) => {
 
-    // const postOrderAbout = {
-    //     data
-    // }
-    const postOrder = await require('../invest.api/ordersService/postOrder')
-         .post({
-             figi: data.lotNotHaveMyProfile.figi,
-             quantity: "1",
-             price: {
-                 "nano": 1,
-                 "units": "36"
-             },
-             direction: data.direction,
-             accountId: data.account.id,
-             orderType: "1",
-             orderId: Date.now(),
-             instrumentId: data.lotNotHaveMyProfile.uid
-         })
+    console.log ('postOrderServiceBuy')
+    console.log (data)
 
-    return {postOrder}
+    // const postOrder = await require('../invest.api/ordersService/postOrder')
+    //      .post({
+    //          figi: data.lotNotHaveMyProfile.figi,
+    //          quantity: "1",
+    //          price: {
+    //              "nano": 1,
+    //              "units": "36"
+    //          },
+    //          direction: data.direction,
+    //          accountId: data.account.id,
+    //          orderType: "2",
+    //          orderId: Date.now(),
+    //          instrumentId: data.lotNotHaveMyProfile.uid
+    //      })
+    //
+    // return postOrder
+}
+
+exports.postOrderServiceSell = async (data) => {
+
+    console.log ('postOrderServiceSell')
+    console.log (data)
+
+    // const postOrder = await require('../invest.api/ordersService/postOrder')
+    //     .post({
+    //         figi: data.lotHaveMyProfile.figi,
+    //         quantity: "1",
+    //         price: {
+    //             "nano": 1,
+    //             "units": "36"
+    //         },
+    //         direction: data.direction,
+    //         accountId: data.account.id,
+    //         orderType: "2",
+    //         orderId: Date.now(),
+    //         instrumentId: data.lotHaveMyProfile.uid
+    //     })
+    //
+    // return postOrder
 }

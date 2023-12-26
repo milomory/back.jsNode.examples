@@ -112,7 +112,7 @@ exports.executeOrder = async (lastSocialLots) => {
 
 
             //... ()
-            const postOrder = await require('../service/postOrder.service').postOrderService({
+            const postOrder = await require('../service/postOrder.service').postOrderServiceSell({
                 lotHaveMyProfile,
                 direction: "2",
                 account
@@ -163,7 +163,7 @@ exports.executeOrder = async (lastSocialLots) => {
             // ===============================
             // Проверка на то, что у меня есть на что покупать
             // ===============================
-            if (lotNotHaveMyProfile.cost <= amountByPortfolio.totalAmountCurrencies.units) {
+            if (lotNotHaveMyProfile.cost <= amountByPortfolio.totalAmountCurrencies.units * 100) {
                 message.push(
                     //"[Сравнение чьей-то " + i + "-й позиции с моей " + j + "-й позицией] " +
                     "Гоблин говорит => Вот моя печенька: " + lotNotHaveMyProfile.ticker + ", " +
@@ -183,7 +183,7 @@ exports.executeOrder = async (lastSocialLots) => {
 
 
                 //... ()
-                const postOrder = await require('../service/postOrder.service').postOrderService({
+                const postOrder = await require('../service/postOrder.service').postOrderServiceBuy({
                     lotNotHaveMyProfile,
                     direction: "1",
                     account
