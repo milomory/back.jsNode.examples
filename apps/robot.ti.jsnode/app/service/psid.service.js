@@ -11,7 +11,7 @@ exports.psid = async (psid) => {
         // ===============================
         // Начинаем работать с ИНВЕСТ-АПИ
         // ===============================
-        console.log (await require('../service/executeOrder.service').executeOrder(lastSocialLots))
+        //console.log (await require('../service/executeOrder.service').executeOrder(lastSocialLots))
 
     }
 }
