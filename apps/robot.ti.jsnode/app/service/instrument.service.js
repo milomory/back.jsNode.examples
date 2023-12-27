@@ -20,10 +20,11 @@ exports.profile = async (psid) => {
 
         if (profiles != undefined && profiles != null) {
 
-            //const currentDate = new Date().toISOString().slice(0, 10)
-            const currentDate = "2023-12-25"
+            const currentDate = new Date().toISOString().slice(0, 10)
+            //const currentDate = "2023-12-25"
             console.log("")
             console.log("Сегодня: " + currentDate)
+            console.log("Время: " + new Date().toTimeString())
             console.log("")
 
             for (let [i, profile] of profiles.entries()) {
@@ -67,7 +68,7 @@ exports.profile = async (psid) => {
                                 // ===============================
                                 // Выбираем по j-тому ордеру всего его акшины
                                 // ===============================
-                                console.log("Выбираем последний акшин " + order.ticker + ":")
+                                console.log("Выбираем последний акшин по тикеру: " + order.ticker + "")
                                 const actions = await require('../social/instruments').getActionsByInstrument({
                                     psid,
                                     profileUid: profile.uid,
@@ -75,30 +76,39 @@ exports.profile = async (psid) => {
                                     order
                                 })
 
-                                // ===============================
-                                // Выводим все акшины по И-тому одеру, но т.к. у нас лимит стоит 1,
-                                // то мы получаем сразу последний
-                                // ===============================
-                                console.log("Action: " + actions[0].action + ", по цене: " + actions[0].averagePrice)
                                 console.log("")
-                                const sharesBy = await require('../invest.api/instrumentsService/sharesBy').get({
-                                    idType:     "INSTRUMENT_ID_TYPE_TICKER",
-                                    classCode:  order.classCode,
-                                    id:         order.ticker
-                                })
+                                console.log("Ловим ошибку")
+                                console.log(actions)
+                                console.log("")
 
-                                instrumentArr.push(
-                                    {
-                                        figi:           sharesBy.instrument.figi,           // sharesBy
-                                        ticker:         order.ticker,
-                                        classCode:      order.classCode,
-                                        uid:            sharesBy.instrument.uid,            // Currencies
-                                        positionUid:    sharesBy.instrument.positionUid,    // Currencies
-                                        tradeDateTime:  actions[0].tradeDateTime,           // '2023-12-25T21:16:06.016+03:00',
-                                        action:         actions[0].action,                  // '2023-12-27T03:08:08.076+03:00
-                                        cost:           actions[0].averagePrice
+                                if (actions != undefined && actions != null && actions != []) {
+                                    if (actions[0].action != undefined && actions[0].action != null) {
+                                        // ===============================
+                                        // Выводим все акшины по И-тому одеру, но т.к. у нас лимит стоит 1,
+                                        // то мы получаем сразу последний
+                                        // ===============================
+                                        console.log("Action: " + actions[0].action + ", по цене: " + actions[0].averagePrice)
+                                        console.log("")
+                                        const sharesBy = await require('../invest.api/instrumentsService/sharesBy').get({
+                                            idType: "INSTRUMENT_ID_TYPE_TICKER",
+                                            classCode: order.classCode,
+                                            id: order.ticker
+                                        })
+
+                                        instrumentArr.push(
+                                            {
+                                                figi: sharesBy.instrument.figi,           // sharesBy
+                                                ticker: order.ticker,
+                                                classCode: order.classCode,
+                                                uid: sharesBy.instrument.uid,            // Currencies
+                                                positionUid: sharesBy.instrument.positionUid,    // Currencies
+                                                tradeDateTime: actions[0].tradeDateTime,           // '2023-12-25T21:16:06.016+03:00',
+                                                action: actions[0].action,                  // '2023-12-27T03:08:08.076+03:00
+                                                cost: actions[0].averagePrice
+                                            }
+                                        )
                                     }
-                                )
+                                }
                             }
                         }
                     }
@@ -107,9 +117,9 @@ exports.profile = async (psid) => {
         }
 
 
-        console.log('instrumentArr')
-        console.log(instrumentArr)
-        console.log("")
+        // console.log('instrumentArr')
+        // console.log(instrumentArr)
+        // console.log("")
 
         const sortedData = instrumentArr.sort((a, b) => {
             if (a.positionUid < b.positionUid) return -1;
@@ -131,12 +141,12 @@ exports.profile = async (psid) => {
             }
         }, []);
 
-        console.log(uniqueData);
+        // console.log(uniqueData);
 
 
 
 
-        return instrumentArr
+        return uniqueData
 
     } catch (error) {
         console.error('Ошибка при получении данных:', error);
