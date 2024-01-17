@@ -78,10 +78,10 @@ exports.profile = async (psid) => {
                                     order
                                 })
 
-                                console.log("")
-                                console.log("Ловим ошибку")
-                                console.log(actions)
-                                console.log("")
+                                // console.log("")
+                                // console.log("Ловим ошибку")
+                                // console.log(actions)
+                                // console.log("")
 
                                 if (actions?.length && actions[0].action) {
 
