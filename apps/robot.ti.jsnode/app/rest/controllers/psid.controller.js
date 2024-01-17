@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/:psid', (req, res) => {
+router.get('/:psid', async (req, res) => {
     const psid = req.params.psid;
     res.send({psid});
-    require('../../service/psid.service').psid(psid).then()
+    await require('../../service/psid.service').psidSave(psid).then()
 });
 
 module.exports = router;

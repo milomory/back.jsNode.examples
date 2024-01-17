@@ -1,5 +1,17 @@
 
 //require('./test.invest.api/investApi.test').run().then()
 
-require('./rest/index')
+const indexInit = async () => {
+    await require('./service/psid.service').psidInit();
+    require('./rest')
+}
+
+indexInit()
+
+
+
+
+
+
+
 

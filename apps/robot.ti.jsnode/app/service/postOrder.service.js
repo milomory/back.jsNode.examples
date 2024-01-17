@@ -8,6 +8,7 @@ exports.postOrderServiceBuy = async (data) => {
         const postOrder = await require('../invest.api/ordersService/postOrder')
             .post({
                 figi: data.lotNotHaveMyProfile.figi,
+                // figi: data.lot.figi,
                 quantity: "1",
                 price: {
                     "nano": 1,
@@ -49,6 +50,7 @@ exports.postOrderServiceSell = async (data) => {
         const postOrder = await require('../invest.api/ordersService/postOrder')
             .post({
                 figi: data.lotHaveMyProfile.figi,
+                // figi: data.lot.figi,
                 quantity: "1",
                 price: {
                     "nano": 1,

@@ -18,7 +18,7 @@ exports.profile = async (psid) => {
         const instrumentArr = []
         const profiles = await require('../social/profiles').getProfile()
 
-        if (profiles != undefined && profiles != null) {
+        if (profiles) {
 
             const currentDate = new Date().toISOString().slice(0, 10)
             //const currentDate = "2023-12-25"
@@ -27,27 +27,32 @@ exports.profile = async (psid) => {
             console.log("Время: " + new Date().toTimeString())
             console.log("")
 
+            // ===============================
+            // Цикл обхода всех профилей
+            // ===============================
             for (let [i, profile] of profiles.entries()) {
 
-                // ===============================
-                // Задержка
-                // ===============================
                 if (profile.pid !== 0) {
-                    await init(5, 10)
-                }
 
-                if (profile.pid !== 0) {
+                    // ===============================
+                    // Задержка
+                    // ===============================
+                    await init(10, 15)
+
                     console.log("")
-                    console.log(i + " - " + profile.name)
+                    console.log(i + "ый Профиль (profile): " + profile.name)
                     console.log("")
 
+                    // ===============================
+                    // Тянем весь ордерЛист
+                    // ===============================
                     const orderList = await require('../social/instruments').getInstrumentList({
                         psid,
                         profileUid: profile.uid,
                         limit:      100 // очень важный параметр, тиньков будет отбивать
                     })
 
-                    if (orderList != undefined && orderList != null) {
+                    if (orderList) {
                         // ===============================
                         // Выбираем только сегодняшние оредеры
                         // ===============================
@@ -59,16 +64,13 @@ exports.profile = async (psid) => {
                                 // ===============================
                                 // Задержка
                                 // ===============================
-                                await init(5, 10)
-                            }
+                                await init(10, 15)
 
-                            if ((order.statistics.maxTradeDateTime.slice(0, 10)) === (currentDate) &&
-                                (order.type === 'share') && (order.currency === 'rub')) {
-                                console.log("ticker: " + order.ticker + ", classCode: " + order.classCode)
                                 // ===============================
-                                // Выбираем по j-тому ордеру всего его акшины
+                                // Выбираем по j-тому ордеру последний его акшин
                                 // ===============================
                                 console.log("Выбираем последний акшин по тикеру: " + order.ticker + "")
+                                console.log("ticker: " + order.ticker + ", classCode: " + order.classCode)
                                 const actions = await require('../social/instruments').getActionsByInstrument({
                                     psid,
                                     profileUid: profile.uid,
@@ -81,33 +83,32 @@ exports.profile = async (psid) => {
                                 console.log(actions)
                                 console.log("")
 
-                                if (actions != undefined && actions != null && actions != []) {
-                                    if (actions[0].action != undefined && actions[0].action != null) {
-                                        // ===============================
-                                        // Выводим все акшины по И-тому одеру, но т.к. у нас лимит стоит 1,
-                                        // то мы получаем сразу последний
-                                        // ===============================
-                                        console.log("Action: " + actions[0].action + ", по цене: " + actions[0].averagePrice)
-                                        console.log("")
-                                        const sharesBy = await require('../invest.api/instrumentsService/sharesBy').get({
-                                            idType: "INSTRUMENT_ID_TYPE_TICKER",
-                                            classCode: order.classCode,
-                                            id: order.ticker
-                                        })
+                                if (actions?.length && actions[0].action) {
 
-                                        instrumentArr.push(
-                                            {
-                                                figi: sharesBy.instrument.figi,           // sharesBy
-                                                ticker: order.ticker,
-                                                classCode: order.classCode,
-                                                uid: sharesBy.instrument.uid,            // Currencies
-                                                positionUid: sharesBy.instrument.positionUid,    // Currencies
-                                                tradeDateTime: actions[0].tradeDateTime,           // '2023-12-25T21:16:06.016+03:00',
-                                                action: actions[0].action,                  // '2023-12-27T03:08:08.076+03:00
-                                                cost: actions[0].averagePrice
-                                            }
-                                        )
-                                    }
+                                    // ===============================
+                                    // Выводим все акшины по И-тому одеру, но т.к. у нас лимит стоит 1,
+                                    // то мы получаем сразу последний
+                                    // ===============================
+                                    console.log("Action: " + actions[0].action + ", по цене: " + actions[0].averagePrice)
+                                    console.log("")
+                                    const sharesBy = await require('../invest.api/instrumentsService/sharesBy').get({
+                                        idType: "INSTRUMENT_ID_TYPE_TICKER",
+                                        classCode: order.classCode,
+                                        id: order.ticker
+                                    })
+
+                                    instrumentArr.push(
+                                        {
+                                            figi: sharesBy.instrument.figi,                     // sharesBy
+                                            ticker: order.ticker,
+                                            classCode: order.classCode,
+                                            uid: sharesBy.instrument.uid,                       // Currencies
+                                            positionUid: sharesBy.instrument.positionUid,       // Currencies
+                                            tradeDateTime: actions[0].tradeDateTime,            // '2023-12-25T21:16:06.016+03:00',
+                                            action: actions[0].action,                          // '2023-12-27T03:08:08.076+03:00
+                                            cost: actions[0].averagePrice
+                                        }
+                                    )
                                 }
                             }
                         }
