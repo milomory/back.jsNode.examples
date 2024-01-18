@@ -1,6 +1,6 @@
 const dbConfig = require("../db.config/db.config.js");
 
-console.log(dbConfig)
+// console.log(dbConfig)
 
 const { DataTypes } = require('sequelize');
 const { Sequelize } = require('sequelize');

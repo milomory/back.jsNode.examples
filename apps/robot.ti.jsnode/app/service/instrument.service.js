@@ -5,7 +5,9 @@ exports.profile = async (psid) => {
         async function init(min, max) {
             const randomTime = (min, max) => Math.random() * (max - min) + min;
             const randomDuration = randomTime(min, max) * 1000;
+            console.log("")
             console.log((randomDuration / 1000) + " sec...")
+            console.log("")
             await sleep(randomDuration);
         }
 
@@ -37,7 +39,7 @@ exports.profile = async (psid) => {
                     // ===============================
                     // Задержка
                     // ===============================
-                    await init(10, 15)
+                    await init(5, 10)
 
                     console.log("")
                     console.log(i + "ый Профиль (profile): " + profile.name)
@@ -64,13 +66,12 @@ exports.profile = async (psid) => {
                                 // ===============================
                                 // Задержка
                                 // ===============================
-                                await init(10, 15)
+                                await init(5, 10)
 
                                 // ===============================
                                 // Выбираем по j-тому ордеру последний его акшин
                                 // ===============================
-                                console.log("Выбираем последний акшин по тикеру: " + order.ticker + "")
-                                console.log("ticker: " + order.ticker + ", classCode: " + order.classCode)
+                                console.log("Выбираем последний action по тикеру: " + order.ticker + ", classCode: " + order.classCode)
                                 const actions = await require('../social/instruments').getActionsByInstrument({
                                     psid,
                                     profileUid: profile.uid,

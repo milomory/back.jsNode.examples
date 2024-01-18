@@ -121,10 +121,12 @@ exports.executeOrder = async (lastSocialLots) => {
             // DIRECTION.BUY or DIRECTION.SELL
             // Направление операции: 1-buy, 2-sell,
             // ===============================
-            const postOrder = await require('../service/postOrder.service').postOrderServiceSell({
-                lotHaveMyProfile,
+            // const postOrder = await require('../service/postOrder.service').postOrderServiceSell({
+            const postOrder = await require('../service/postOrder.service').postOrderService({
+                lots: lotHaveMyProfile,
                 direction: "2",
-                account
+                account,
+                orderType: "2"
             })
             console.log('Функция продажи')
             console.log(postOrder)
@@ -180,10 +182,12 @@ exports.executeOrder = async (lastSocialLots) => {
                 // DIRECTION.BUY or DIRECTION.SELL
                 // Направление операции: 1-buy, 2-sell,
                 // ===============================
-                const postOrder = await require('../service/postOrder.service').postOrderServiceBuy({
-                    lotNotHaveMyProfile,
+                // const postOrder = await require('../service/postOrder.service').postOrderServiceBuy({
+                const postOrder = await require('../service/postOrder.service').postOrderService({
+                    lots: lotNotHaveMyProfile,
                     direction: "1",
-                    account
+                    account,
+                    orderType: "1"
                 })
                 console.log('Функция покупки')
                 console.log(postOrder)
