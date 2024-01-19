@@ -6,7 +6,7 @@ exports.profile = async (psid) => {
             const randomTime = (min, max) => Math.random() * (max - min) + min;
             const randomDuration = randomTime(min, max) * 1000;
             console.log("")
-            console.log((randomDuration / 1000) + " sec...")
+            console.log("Задержка от " + min + " до " + max + " => " + (randomDuration / 1000) + " sec...")
             console.log("")
             await sleep(randomDuration);
         }
@@ -42,7 +42,7 @@ exports.profile = async (psid) => {
                     await init(5, 10)
 
                     console.log("")
-                    console.log(i + "ый Профиль (profile): " + profile.name)
+                    console.log("Профиль № " + i + " (profile): " + profile.name)
                     console.log("")
 
                     // ===============================
@@ -79,11 +79,6 @@ exports.profile = async (psid) => {
                                     order
                                 })
 
-                                // console.log("")
-                                // console.log("Ловим ошибку")
-                                // console.log(actions)
-                                // console.log("")
-
                                 if (actions?.length && actions[0].action) {
 
                                     // ===============================
@@ -91,7 +86,6 @@ exports.profile = async (psid) => {
                                     // то мы получаем сразу последний
                                     // ===============================
                                     console.log("Action: " + actions[0].action + ", по цене: " + actions[0].averagePrice)
-                                    console.log("")
                                     const sharesBy = await require('../invest.api/instrumentsService/sharesBy').get({
                                         idType: "INSTRUMENT_ID_TYPE_TICKER",
                                         classCode: order.classCode,

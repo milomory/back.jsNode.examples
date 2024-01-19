@@ -1,12 +1,14 @@
 
-const {Psid: PsidService, CountService} = require('../db/db.models/psid.model');
+const {Psid: PsidService} = require('../db/db.models/psid.model');
 
 exports.initPsid = async () => {
-    await PsidService.sync({ force: true }).then(() => {
+    await PsidService.sync({
+        force: true
+    }).then(() => {
         // console.log('Таблица "psid" успешно создана');
     }).catch(error => {
-            console.error('Ошибка при создании таблицы:', error);
-        });
+        console.error('Ошибка при создании таблицы:', error);
+    });
 
     await PsidService.upsert({
         id: 1,
@@ -41,7 +43,6 @@ exports.savePsid = async (psid) => {
 exports.getPsid = async () => {
     try {
         const Psid = await PsidService.findOne({ where: { id: 1 } })
-        // console.log('getPsid - psid =', Psid.dataValues.psid);
         return Psid.dataValues.psid
     } catch (error) {
         console.error('Ошибка:', error);

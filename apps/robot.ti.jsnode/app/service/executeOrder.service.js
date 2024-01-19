@@ -126,7 +126,7 @@ exports.executeOrder = async (lastSocialLots) => {
                 lots: lotHaveMyProfile,
                 direction: "2",
                 account,
-                orderType: "2"
+                orderType: "1"
             })
             console.log('Функция продажи')
             console.log(postOrder)

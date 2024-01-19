@@ -7,6 +7,10 @@ const Count = sequelize.define('count', {
         primaryKey: true,
         autoIncrement: true,
     },
+    counter: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
     countStatus: {
         type: DataTypes.INTEGER,
         allowNull: false,

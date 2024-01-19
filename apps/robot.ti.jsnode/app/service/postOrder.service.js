@@ -1,125 +1,48 @@
+const { v4: uuidv4 } = require('uuid');
+
 exports.postOrderService = async (data) => {
 
     try {
 
-        console.log ('postOrderServiceBuy')
+        console.log ('postOrderService')
         console.log (data)
 
-        const postOrder = await require('../invest.api/ordersService/postOrder')
+        return await require('../invest.api/ordersService/postOrder')
             .post({
-                figi: data.lots.figi,
-                quantity: "1",
+                figi:               data.lots.figi,
+                quantity:           "1",
+                // Decimal(bid["price"]["units"]) + Decimal(bid["price"]["nano"])
+                // 1e9 - это перевод в нормальные цифры, 1е9 == 1000000000
                 price: {
-                    "currency": "rub",
-                    "nano": 0,
-                    "units": Math.trunc(data.lots.cost)
+                    "currency":     "rub",
+                    //"nano":         (data.lots.cost - Math.trunc(data.lots.cost)) * 1000 * 1000 * 1000,
+                    "nano":         data.direction === 1 ? 500000000 : 0,
+                    //"nano":         0,
+                    "units":        Math.trunc(data.lots.cost)
                 },
-                direction: data.direction,
-                accountId: data.account.id,
-                orderType: data.orderType,
-                orderId: Date.now(),
-                instrumentId: data.lots.uid
+                direction:          data.direction,
+                accountId:          data.account.id,
+                orderType:          data.orderType,
+                orderId:            Date.now(),
+                // orderId:            uuidv4(),
+                instrumentId:       data.lots.uid
             })
 
-        if (postOrder.response) {
-            if (postOrder.response.status != 200) {
-                console.log("It is not GOOD! message: " + postOrder.data.message)
-
-            } else {
-                console.log("It is  GOOD! message: " + postOrder.data.message)
-                // ...
-            }
-        }
-
-        return postOrder
-
     } catch (error) {
-        console.error('Ошибка при получении данных:', error);
-        throw error
+        if (error.response) {
+            if (error.response.statusCode === 400) {
+                // Обработка ошибки 400 здесь
+                console.error('Ошибка 400:', error.response.data);
+                return;
+            } else {
+                // Обработка других ошибок здесь
+                console.error('Ошибка:', error.response.data);
+                return;
+            }
+        } else {
+            // Обработка ошибок без статуса ответа здесь
+            console.error('Ошибка:', error);
+            return;
+        }
     }
-
 }
-
-// exports.postOrderServiceBuy = async (data) => {
-//
-//     try {
-//
-//         console.log ('postOrderServiceBuy')
-//         console.log (data)
-//
-//         const postOrder = await require('../invest.api/ordersService/postOrder')
-//             .post({
-//                 figi: data.lotNotHaveMyProfile.figi,
-//                 // figi: data.lot.figi,
-//                 quantity: "1",
-//                 price: {
-//                     "nano": 1,
-//                     "units": "36"
-//                 },
-//                 direction: data.direction,
-//                 accountId: data.account.id,
-//                 orderType: "2",
-//                 orderId: Date.now(),
-//                 instrumentId: data.lotNotHaveMyProfile.uid
-//             })
-//
-//         if (postOrder.response) {
-//             if (postOrder.response.status != 200) {
-//                 console.log("It is not GOOD! message: " + postOrder.data.message)
-//
-//             } else {
-//                 console.log("It is  GOOD! message: " + postOrder.data.message)
-//                 // ...
-//             }
-//         }
-//
-//         return postOrder
-//
-//     } catch (error) {
-//         console.error('Ошибка при получении данных:', error);
-//         throw error
-//     }
-//
-// }
-//
-// exports.postOrderServiceSell = async (data) => {
-//
-//     try {
-//
-//         console.log ('postOrderServiceSell')
-//         console.log (data)
-//
-//         const postOrder = await require('../invest.api/ordersService/postOrder')
-//             .post({
-//                 figi: data.lotHaveMyProfile.figi,
-//                 // figi: data.lot.figi,
-//                 quantity: "1",
-//                 price: {
-//                     "nano": 0,
-//                     "units": ""+ Math.trunc(data.lotHaveMyProfile.cost) +""
-//                 },
-//                 direction: data.direction,
-//                 accountId: data.account.id,
-//                 orderType: "1",
-//                 orderId: Date.now(),
-//                 instrumentId: data.lotHaveMyProfile.uid
-//             })
-//
-//         if (postOrder.response) {
-//             if (postOrder.response.status != 200) {
-//                 console.log("It is not GOOD! message: " + postOrder.data.message)
-//
-//             } else {
-//                 console.log("It is  GOOD! message: " + postOrder.data.message)
-//                 // ...
-//             }
-//         }
-//
-//         return postOrder
-//
-//     } catch (error) {
-//         console.error('Ошибка при получении данных:', error);
-//         throw error
-//     }
-//
-// }

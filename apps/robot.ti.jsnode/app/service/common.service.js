@@ -1,14 +1,14 @@
 
-exports.runCommon = async (psid) => {
-    try {
-        if (psid) {
+exports.common = async () => {
+    setInterval(async function () {
+        if ((await require('./psid.service').getPsid()) && (await require('./count.service').getCountStatus() === 0)) {
 
             await require('./count.service').saveCount(1)
 
             // ===============================
             // Начинаем работать с Social-Api
             // ===============================
-            const lastSocialLots = await require('./instrument.service').profile(psid)
+            const lastSocialLots = await require('./instrument.service').profile(await require('./psid.service').getPsid())
 
             // ===============================
             // Начинаем работать с ИНВЕСТ-АПИ
@@ -18,7 +18,5 @@ exports.runCommon = async (psid) => {
             await require('./count.service').saveCount(0)
 
         }
-    } catch (error) {
-        console.error('Ошибка:', error);
-    }
+    }, 1000);
 }
