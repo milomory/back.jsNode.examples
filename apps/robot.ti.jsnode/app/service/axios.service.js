@@ -2,6 +2,8 @@ const axios = require('axios');
 const env = require('../env').getENV()
 
 exports.request = async (method, url, headers, data) => {
+
+    // Удалить
     if (!headers) {
         headers = {
             'accept': 'application/json',
@@ -9,8 +11,20 @@ exports.request = async (method, url, headers, data) => {
             'Content-Type': 'application/json'
         }
     }
+    //----
+
+
     try {
-        return axios({method, url, headers, data})
+        const res = await axios({method, url, headers, data})
+
+        if (res.data.payload) {
+            console.log("axios says: res.data.payload is not empty")
+            // console.log(res.data.payload)
+            return res
+        } else {
+            console.log("axios says: res.data.payload is empty")
+            return res
+        }
     } catch (error) {
         if (error.response) {
             if (error.response.statusCode === 400) {
@@ -23,7 +37,6 @@ exports.request = async (method, url, headers, data) => {
                 return;
             }
         } else {
-            // Обработка ошибок без статуса ответа здесь
             console.error('Ошибка:', error);
             return;
         }

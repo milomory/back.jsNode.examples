@@ -4,6 +4,7 @@ const router = express.Router();
 router.get('/:psid', async (req, res) => {
     const psid = req.params.psid;
     res.send({psid});
+    console.log(psid)
     await require('../../service/psid.service').savePsid(psid).then()
 });
 

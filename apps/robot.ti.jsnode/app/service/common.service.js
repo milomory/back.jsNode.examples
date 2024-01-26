@@ -8,12 +8,14 @@ exports.common = async () => {
             // ===============================
             // Начинаем работать с Social-Api
             // ===============================
-            const lastSocialLots = await require('./instrument.service').profile(await require('./psid.service').getPsid())
+            const lastSocialLots = await require('./social.service').getSocialInstruments(await require('./psid.service').getPsid())
+            console.log(lastSocialLots)
 
             // ===============================
             // Начинаем работать с ИНВЕСТ-АПИ
             // ===============================
-            console.log(await require('./executeOrder.service').executeOrder(lastSocialLots))
+            const robot = await require('./robot.service').run(lastSocialLots)
+            console.log(robot)
 
             await require('./count.service').saveCount(0)
 

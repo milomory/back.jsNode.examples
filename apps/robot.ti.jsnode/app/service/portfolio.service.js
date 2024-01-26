@@ -4,7 +4,7 @@ exports.getInstrumentByPortfolio = async (account) => {
     // ===============================
     // Пихаем этот ИД и карренси, чтобы потом посмотреть, что там внутри вообще есть рублевого
     // ===============================
-    const portfolio = await require('../invest.api/operationsService/getPortfolio').get({
+    const portfolio = await require('./invest.api/operationsService/getPortfolio').get({
         accountId:  account.id,
         currency:   'RUB'
     })
@@ -13,7 +13,7 @@ exports.getInstrumentByPortfolio = async (account) => {
     const portfolioPositionsArr = []
     for (let [i, position] of portfolio.positions.entries()) {
         if (position.instrumentType === "share") {
-            const findInstrument = await require('../invest.api/instrumentsService/findInstrument').get({
+            const findInstrument = await require('./invest.api/instrumentsService/findInstrument').get({
                 "query": position.positionUid,
                 "instrumentKind": "INSTRUMENT_TYPE_SHARE",
                 "apiTradeAvailableFlag": true
@@ -35,7 +35,7 @@ exports.getInstrumentByPortfolio = async (account) => {
 }
 
 exports.getAmountByPortfolio = async (account) => {
-    const portfolio = await require('../invest.api/operationsService/getPortfolio').get({
+    const portfolio = await require('./invest.api/operationsService/getPortfolio').get({
         accountId:  account.id,
         currency:   'RUB'
     })
