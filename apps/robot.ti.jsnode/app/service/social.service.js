@@ -1,11 +1,11 @@
 
-exports.getSocialInstruments = async (psid) => {
+exports.getSocialInstruments = async (profiles) => {
+
+    const psid = await require('./psid.service').getPsid()
 
     const lastSocialLots = []
-    const profiles = await require('../nsi/profiles.nsi').getProfile()
-    //const maxActivities =
 
-    if (profiles) {
+    if (profiles && psid) {
 
         const currentDate = new Date().toISOString().slice(0, 10)
         //const currentDate = "2024-01-25"
