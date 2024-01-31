@@ -1,5 +1,5 @@
 
-const { sequelize, DataTypes } = require('./sequelize')
+const { sequelize, DataTypes } = require('../db.config/sequelize')
 
 const Count = sequelize.define('count', {
     id: {
@@ -14,7 +14,7 @@ const Count = sequelize.define('count', {
     countStatus: {
         type: DataTypes.INTEGER,
         allowNull: false,
-    },
+    }
 });
 
 module.exports = { Count };

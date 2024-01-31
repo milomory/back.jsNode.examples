@@ -1,5 +1,5 @@
 
-const {Count: CountService} = require('../db/db.models/count.model');
+const {Count: CountService} = require('../../db/db.models/count.model');
 
 const upsert = async (countStatus, counter) => {
     await CountService.upsert({
@@ -14,7 +14,7 @@ const upsert = async (countStatus, counter) => {
     });
 }
 
-exports.initCount = async () => {
+exports.initCountTable = async () => {
     await CountService.sync({
         force: true
     }).then(() => {
@@ -27,8 +27,8 @@ exports.initCount = async () => {
 
 exports.saveCount = async (countStatus) => {
     try {
-        const Count = await CountService.findOne({ where: { id: 1 } })
-        const Counter = Count.dataValues.counter;
+        const result = await CountService.findOne({ where: { id: 1 } })
+        const Counter = result.dataValues.counter;
         await upsert(countStatus, ((countStatus === 0) ? Counter + 1 : Counter))
     } catch (error) {
         console.error('Ошибка:', error);
@@ -37,8 +37,14 @@ exports.saveCount = async (countStatus) => {
 
 exports.getCountStatus = async () => {
     try {
-        const Count = await CountService.findOne({ where: { id: 1 } })
-        return Count.dataValues.countStatus
+        const result = await CountService.findOne({ where: { id: 1 } })
+        if (result) {
+            // Обращаемся к свойствам результата только если он не пустой
+            // console.log(result.dataValues);
+            return result.dataValues.countStatus
+        } else {
+            console.log('Результат запроса пуст');
+        }
     } catch (error) {
         console.error('Ошибка:', error);
     }

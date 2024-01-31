@@ -1,7 +1,7 @@
 
-const {Psid: PsidService} = require('../db/db.models/psid.model');
+const {Psid: PsidService} = require('../../db/db.models/psid.model');
 
-exports.initPsid = async () => {
+exports.initPsidTable = async () => {
     await PsidService.sync({
         force: true
     }).then(() => {
@@ -42,8 +42,14 @@ exports.savePsid = async (psid) => {
 
 exports.getPsid = async () => {
     try {
-        const Psid = await PsidService.findOne({ where: { id: 1 } })
-        return Psid.dataValues.psid
+        const result = await PsidService.findOne({ where: { id: 1 } })
+        if (result) {
+            // Обращаемся к свойствам результата только если он не пустой
+            // console.log(result.dataValues);
+            return result.dataValues.psid
+        } else {
+            console.log('Результат запроса пуст');
+        }
     } catch (error) {
         console.error('Ошибка:', error);
     }

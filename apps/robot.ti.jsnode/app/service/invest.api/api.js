@@ -14,8 +14,8 @@ exports.getApiService = async (apiService, data) => {
             headers,
             data);
         if (response?.data) {
-            console.log("api.js says: response.data is it")
-            //console.log(response.data)
+            // console.log("api.js says: response.data is it")
+            // console.log(response.data)
             return response.data
         } else {
             console.log("api.js says: response.data is EMPTY, and look it this response...")

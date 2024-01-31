@@ -1,14 +1,12 @@
 
 exports.getSocialInstruments = async (profiles) => {
 
-    const psid = await require('./psid.service').getPsid()
-
-    const lastSocialLots = []
+    const psid = await require('./db/psid.service').getPsid()
 
     if (profiles && psid) {
 
-        const currentDate = new Date().toISOString().slice(0, 10)
-        //const currentDate = "2024-01-25"
+        // const currentDate = new Date().toISOString().slice(0, 10)
+        const currentDate = "2024-01-31"
         console.log("")
         console.log("Сегодня: " + currentDate)
         console.log("Время: " + new Date().toTimeString())
@@ -81,9 +79,7 @@ exports.getSocialInstruments = async (profiles) => {
                                 })
 
                                 if (sharesBy) {
-                                    console.log('sharesBy is not empty')
-                                    lastSocialLots.push(
-                                        {
+                                    const robot = await require('./robot.service').run({
                                             figi:                   sharesBy.instrument.figi,            // sharesBy
                                             ticker:                 order.ticker,
                                             classCode:              order.classCode,
@@ -94,8 +90,8 @@ exports.getSocialInstruments = async (profiles) => {
                                             action:                 actions[0].action,                   // '2023-12-27T03:08:08.076+03:00
                                             averagePrice:           actions[0].averagePrice,
                                             relativeYield:          actions[0].relativeYield
-                                        }
-                                    )
+                                        })
+                                    console.log(robot)
                                 }
                             }
                         }
@@ -105,6 +101,6 @@ exports.getSocialInstruments = async (profiles) => {
         }
     }
 
-    return lastSocialLots
+    //return lastSocialLots
 
 }

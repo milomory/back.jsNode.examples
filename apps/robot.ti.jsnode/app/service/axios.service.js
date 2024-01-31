@@ -18,7 +18,7 @@ exports.request = async (method, url, headers, data) => {
         const res = await axios({method, url, headers, data})
 
         if (res.data.payload) {
-            console.log("axios says: res.data.payload is not empty")
+            // console.log("axios says: res.data.payload is not empty")
             // console.log(res.data.payload)
             return res
         } else {

@@ -1,5 +1,5 @@
 
-const { sequelize, DataTypes } = require('./sequelize')
+const { sequelize, DataTypes } = require('../db.config/sequelize')
 
 const Psid = sequelize.define('psid', {
     id: {
@@ -10,7 +10,7 @@ const Psid = sequelize.define('psid', {
     psid: {
         type: DataTypes.STRING,
         allowNull: false,
-    },
+    }
 });
 
 module.exports = { Psid };

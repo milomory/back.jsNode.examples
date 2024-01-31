@@ -18,7 +18,8 @@ exports.getInstrumentByPortfolio = async (account) => {
                 "instrumentKind": "INSTRUMENT_TYPE_SHARE",
                 "apiTradeAvailableFlag": true
             })
-            //console.log(findInstrument)
+            // console.log("portfolio.service - findInstrument")
+            // console.log(findInstrument)
             portfolioPositionsArr.push(
                 {
                     figi:           findInstrument.instruments[0].figi,
