@@ -1,4 +1,4 @@
-const getShares = () => {
+exports.getShares = () => {
 
     return [
     {

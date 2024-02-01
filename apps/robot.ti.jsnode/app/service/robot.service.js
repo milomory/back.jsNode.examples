@@ -1,3 +1,4 @@
+
 exports.run = async (lastSocialLot) => {
 
     console.log("lastSocialLot")
@@ -7,20 +8,14 @@ exports.run = async (lastSocialLot) => {
     // Смотрим выбранный мой аккаунт, созданный для этого всего
     // ===============================
     const account = await require('./invest.api/usersService.api.service').getAccount(5)
-    // console.log("robot.service - account")
-    // console.log(account)
-    // // ===============================
+    // ===============================
     // Смотрим лоты в моем портфеле
     // ===============================
     const instrumentByPortfolio = await require('./portfolio.service').getInstrumentByPortfolio(account)
-    // console.log("robot.service - instrumentByPortfolio")
-    // console.log(instrumentByPortfolio)
-    // // ===============================
+    // ===============================
     // Смотрим деньги в моем портфеле
     // ===============================
     const amountByPortfolio = await require('./portfolio.service').getAmountByPortfolio(account)
-    // console.log("robot.service - amountByPortfolio")
-    // console.log(amountByPortfolio)
 
     if (instrumentByPortfolio.find(obj => obj.positionUid === lastSocialLot.positionUid)) {
         console.log(lastSocialLot.ticker + " В портфеле такая штука есть, посмотрим на ее акшин. " + lastSocialLot.action)
@@ -40,7 +35,6 @@ exports.run = async (lastSocialLot) => {
                 console.log(postOrder)
                 console.log('Система говорит => Продано, ура!' + lastSocialLot.ticker)
             }
-
         }
     } else {
         if ((lastSocialLot.action === 'buy') && (lastSocialLot.averagePrice * 100 < amountByPortfolio.totalAmountCurrencies.units)) {
@@ -58,11 +52,8 @@ exports.run = async (lastSocialLot) => {
                 console.log(postOrder)
                 console.log('Система говорит => Покуплено, ура!' + lastSocialLot.ticker)
             }
-
-
         }
     }
-
-
+    return "END ROBOT"
 }
 

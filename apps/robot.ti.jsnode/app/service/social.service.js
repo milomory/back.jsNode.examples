@@ -42,10 +42,10 @@ exports.getSocialInstruments = async (profiles) => {
                     // ===============================
                     // Выбираем только сегодняшние оредеры
                     // ===============================
-                    for (let [j, order] of orderList.entries()) {
+                    for (let [i, order] of orderList.entries()) {
 
-                        if ((order.statistics.maxTradeDateTime.slice(0, 10)) === (currentDate) &&
-                            (order.type === 'share') && (order.currency === 'rub')) {
+                        if ((order?.statistics?.maxTradeDateTime?.slice(0, 10)) === (currentDate) &&
+                            (order?.type === 'share') && (order?.currency === 'rub')) {
 
                             // ===============================
                             // Задержка
@@ -53,7 +53,7 @@ exports.getSocialInstruments = async (profiles) => {
                             await require("./delay.service").delay(5, 10)
 
                             // ===============================
-                            // Выбираем по j-тому ордеру последний его акшин
+                            // Выбираем по i-тому ордер-листу последний его акшин
                             // ===============================
                             const actions = await require('./instruments.social.service').getActionsByInstrument({
                                 psid,
@@ -62,36 +62,38 @@ exports.getSocialInstruments = async (profiles) => {
                                 order
                             })
 
-                            if (actions?.length && actions[0].action) {
+                            if (actions?.length && actions[0]?.action) {
 
                                 // ===============================
                                 // Выводим все акшины по И-тому одеру, но т.к. у нас лимит стоит 1,
                                 // то мы получаем сразу последний
                                 // ===============================
-                                console.log("Смотрим все акшины по И-тому одеру, но т.к. у нас лимит стоит 1, то мы получаем сразу последний. " +
-                                    "Выбираем Ticker: " + order.ticker + ". Action: " + actions[0].action + ". Cost: " + actions[0].averagePrice)
+                                console.log("Смотрим последний экшин по " + i + "-тому одер-листу. " +
+                                    "Профиль " + profile?.name + ". " +
+                                    "classCode: " + order?.classCode + ". " +
+                                    "type: " + order?.type + ". " +
+                                    "Ticker: " + order?.ticker + ". " +
+                                    "Action: " + actions[0]?.action + ". " +
+                                    "Cost: " + actions[0]?.averagePrice)
 
-                                const sharesBy = await require('./invest.api/instrumentsService.api.service').sharesBy({
-                                    //const sharesBy = await require('./invest.api/instrumentsService/sharesBy').getSharesBy({
-                                    idType: "INSTRUMENT_ID_TYPE_TICKER",
-                                    classCode: order.classCode,
-                                    id: order.ticker
-                                })
+                                const sharesBy = await require('./invest.api/instrumentsService/sharesBy.nsi.service').getSharesBy(order.ticker)
 
                                 if (sharesBy) {
-                                    const robot = await require('./robot.service').run({
-                                            figi:                   sharesBy.instrument.figi,            // sharesBy
-                                            ticker:                 order.ticker,
-                                            classCode:              order.classCode,
-                                            name:                   sharesBy.instrument.name,
-                                            uid:                    sharesBy.instrument.uid,             // Currencies
-                                            positionUid:            sharesBy.instrument.positionUid,     // Currencies
-                                            tradeDateTime:          actions[0].tradeDateTime,            // '2023-12-25T21:16:06.016+03:00',
-                                            action:                 actions[0].action,                   // '2023-12-27T03:08:08.076+03:00
-                                            averagePrice:           actions[0].averagePrice,
-                                            relativeYield:          actions[0].relativeYield
-                                        })
-                                    console.log(robot)
+                                    console.log("START ROBOT")
+                                    console.log(await require('./robot.service').run({
+                                        figi:                   sharesBy.figi,              // sharesBy
+                                        ticker:                 order.ticker,
+                                        classCode:              order.classCode,
+                                        name:                   sharesBy.name,
+                                        exchange:               sharesBy.exchange,
+                                        uid:                    sharesBy.uid,
+                                        positionUid:            sharesBy.positionUid,
+                                        tradeDateTime:          actions[0].tradeDateTime,   // '2023-12-25T21:16:06.016+03:00',
+                                        action:                 actions[0].action,
+                                        averagePrice:           actions[0].averagePrice,
+                                        relativeYield:          actions[0].relativeYield,
+                                        minPriceIncrement:      sharesBy.minPriceIncrement
+                                    }))
                                 }
                             }
                         }

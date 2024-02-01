@@ -17,13 +17,11 @@ exports.request = async (method, url, headers, data) => {
     try {
         const res = await axios({method, url, headers, data})
 
-        if (res.data.payload) {
-            // console.log("axios says: res.data.payload is not empty")
-            // console.log(res.data.payload)
+        if (res) {
             return res
         } else {
-            console.log("axios says: res.data.payload is empty")
-            return res
+            console.log("axios says: res is empty")
+            return
         }
     } catch (error) {
         if (error.response) {

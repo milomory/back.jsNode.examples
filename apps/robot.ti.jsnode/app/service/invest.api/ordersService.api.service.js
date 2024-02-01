@@ -47,9 +47,18 @@ const activationPostOrder = async (data) => {
     }
 }
 
-const priceTransform = async(units, nano) => {
+const priceTransform = (units, nano) => {
     let concatenatedPrice = '' + units + nano;
     return parseInt(concatenatedPrice).toString().slice(0, 9)
+}
+
+const lastLotPriceTransform = (number, length) => {
+    let parts = number.toString().split('.');
+    let concatenatedLastLotPrice = priceTransform(parts[0], parts[1])
+    let concatenatedLastLotPriceLength = concatenatedLastLotPrice.length
+    let postfixNumber = length - concatenatedLastLotPriceLength
+    let zeroString = "0".repeat(postfixNumber);
+    return parseInt("" + concatenatedLastLotPrice + zeroString)
 }
 
 
@@ -83,13 +92,13 @@ exports.postOrder = async (data) => {
         if (lastTradeByInstrumentId.direction === "1") {
             console.log("Пытаемся продать, т.к. уже есть ТРУШНАЯ запись о покупке (Дирекшион 1), но смотрим выросла ли цена")
 
-            const OrderBookLastPriceUnits = OrderBook?.lastPrice?.units // OrderBook units
-            console.log("OrderBook LastPrice Units")
-            console.log(OrderBookLastPriceUnits)
+            const OrderBookPriceUnits = OrderBook?.closePrice?.units // OrderBook units //lastPrice & closePrice
+            console.log("OrderBook Price Units")
+            console.log(OrderBookPriceUnits)
 
-            const OrderBookLastPriceNano = OrderBook?.lastPrice?.nano // OrderBook nano
-            console.log("OrderBook LastPrice Nano")
-            console.log(OrderBookLastPriceNano)
+            const OrderBookPriceNano = OrderBook?.closePrice?.nano // OrderBook nano //lastPrice & closePrice
+            console.log("OrderBook Price Nano")
+            console.log(OrderBookPriceNano)
 
             const findTradeByInstrumentIdPriceUnits = lastTradeByInstrumentId?.price_units
             console.log("find TradeByInstrumentId PriceUnits");
@@ -100,13 +109,18 @@ exports.postOrder = async (data) => {
             console.log(findTradeByInstrumentIdPriceNano) // My nano
 
             // concatenated & slice -> 0-8
-            const concatenatedOrderBookPrice = priceTransform(OrderBookLastPriceUnits, OrderBookLastPriceNano)
+            const concatenatedOrderBookPrice = priceTransform(OrderBookPriceUnits, OrderBookPriceNano)
             console.log("concatenatedOrderBookPrice (slice -> 0-9)")
             console.log(concatenatedOrderBookPrice) // OrderBook Price
 
             const concatenatedTradesPrice = priceTransform(findTradeByInstrumentIdPriceUnits, findTradeByInstrumentIdPriceNano)
             console.log("concatenatedTradesPrice (slice -> 0-9)")
             console.log(concatenatedTradesPrice) // My Price
+
+            const concatenatedLastSocialLotPrice = lastLotPriceTransform(data.lot.averagePrice, concatenatedTradesPrice.toString().length)
+            console.log("concatenatedLastSocialLotPrice")
+            console.log(concatenatedLastSocialLotPrice) // Last Lot Price
+
 
             if (concatenatedOrderBookPrice > concatenatedTradesPrice) {
                 console.log("Запускаем активашку, цена в стакане выше закупочной.")
@@ -119,7 +133,7 @@ exports.postOrder = async (data) => {
             console.log("Т.к. последняя запись со статусом ТРУ имеет Дирекшион 2, то надо покупать!")
             // Надо проверить, что в дате тоже приходит БУй
 
-            console.log("Запускаем активашеу")
+            console.log("Запускаем активашку")
             await activationPostOrder(data) // Надо проверить, что в дате тоже приходит БУЙ
         }
 

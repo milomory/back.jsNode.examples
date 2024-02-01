@@ -18,7 +18,8 @@ exports.getApiService = async (apiService, data) => {
             // console.log(response.data)
             return response.data
         } else {
-            console.log("api.js says: response.data is EMPTY, and look it this response...")
+            console.log("Module (api.js) says: response.data is EMPTY")
+            console.log(response)
         }
     } catch (error) {
         if (error.response) {
