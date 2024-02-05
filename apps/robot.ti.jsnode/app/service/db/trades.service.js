@@ -1,6 +1,5 @@
 
 const {Trades: TradesService} = require('../../db/db.models/trades.model');
-const {Count: CountService} = require("../../db/db.models/count.model");
 
 exports.initTradesTable = async () => {
     await TradesService.sync({
@@ -24,26 +23,27 @@ exports.updateTrade = async (Trade, Order) => {
     // console.error(Trade[0].dataValues.id)
     const id = Trade[0].dataValues.id
     return await TradesService.update({
-        price_units: Order.initialOrderPrice.units,
-        price_nano: Order.initialOrderPrice.nano,
-        orderType: Order.orderType,
-        orderId: Order.orderId
+        price_units: Order?.initialOrderPrice?.units,
+        price_nano: Order?.initialOrderPrice?.nano,
+        orderType: Order?.orderType,
+        orderId: Order?.orderId
     }, { where: { id } });
 }
 
 exports.saveTrade = async (data) => {
     try {
         return await TradesService.upsert({
-            figi: data.lot.figi,
+            figi: data?.lot?.figi,
             quantity: "1",
             price_currency: "rub",
             price_units: 1,
             price_nano: 1,
-            direction: data.direction,
-            accountId: data.account.id,
-            orderType: data.orderType,
+            direction: data?.direction,
+            accountId: data?.account.id,
+            orderType: data?.orderType,
             orderId: "",
-            instrumentId: data.lot.uid,
+            tradeDateTime: data?.lot?.tradeDateTime,
+            instrumentId: data?.lot?.uid,
             status: false
         });
     } catch (error) {

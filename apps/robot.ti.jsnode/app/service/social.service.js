@@ -5,8 +5,8 @@ exports.getSocialInstruments = async (profiles) => {
 
     if (profiles && psid) {
 
-        // const currentDate = new Date().toISOString().slice(0, 10)
-        const currentDate = "2024-01-31"
+        const currentDate = new Date().toISOString().slice(0, 10)
+        // const currentDate = "2024-01-31"
         console.log("")
         console.log("Сегодня: " + currentDate)
         console.log("Время: " + new Date().toTimeString())

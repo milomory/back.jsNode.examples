@@ -43,6 +43,10 @@ const Trades = sequelize.define('trades', {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    tradeDateTime:{
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
     instrumentId: {
         type: DataTypes.STRING,
         allowNull: false,
