@@ -1,7 +1,7 @@
 
 exports.run = async (lastSocialLot) => {
 
-    console.log("lastSocialLot")
+    console.log("ROBOT module says - lastSocialLot:")
     console.log(lastSocialLot)
 
     // ===============================
@@ -18,12 +18,13 @@ exports.run = async (lastSocialLot) => {
     const amountByPortfolio = await require('./portfolio.service').getAmountByPortfolio(account)
 
     if (instrumentByPortfolio.find(obj => obj.positionUid === lastSocialLot.positionUid)) {
-        console.log(lastSocialLot.ticker + " В портфеле такая штука есть, посмотрим на ее акшин. " + lastSocialLot.action)
+        console.log("ROBOT module says - " + lastSocialLot.ticker + " В портфеле такая штука есть, посмотрим на ее акшин... " + lastSocialLot.action)
 
         if (lastSocialLot.action === 'sell') {
             // ===============================
             // Функция продажи
             // ===============================
+            console.log("ROBOT module says - Функция продажи")
             const postOrder = await require('./invest.api/ordersService.api.service').postOrder({
                 lot: lastSocialLot,
                 direction: "2",
@@ -31,29 +32,37 @@ exports.run = async (lastSocialLot) => {
                 orderType: "2"
             })
             if (postOrder) {
-                console.log('Функция продажи вернула это')
+                console.log('ROBOT module says - Функция продажи вернула это:')
                 console.log(postOrder)
-                console.log('Система говорит => Продано, ура!' + lastSocialLot.ticker)
+                console.log('ROBOT module says - Система говорит => Продано, ура!' + lastSocialLot?.ticker)
             }
         }
     } else {
-        if ((lastSocialLot.action === 'buy') && (lastSocialLot.averagePrice * 100 < amountByPortfolio.totalAmountCurrencies.units)) {
-            // ===============================
-            // Функция покупки
-            // ===============================
-            const postOrder = await require('./invest.api/ordersService.api.service').postOrder({
-                lot: lastSocialLot,
-                direction: "1",
-                account,
-                orderType: "2"
-            })
-            if (postOrder) {
-                console.log('Функция покупки вернула это')
-                console.log(postOrder)
-                console.log('Система говорит => Покуплено, ура!' + lastSocialLot.ticker)
+        console.log("ROBOT module says - " + lastSocialLot.ticker + " В портфеле такой штуки нет, посмотрим на ее акшин...  " + lastSocialLot.action + " ")
+
+        if (lastSocialLot?.action === 'buy') {
+            if (lastSocialLot?.averagePrice * lastSocialLot?.lot < amountByPortfolio?.totalAmountCurrencies?.units) {
+                // ===============================
+                // Функция покупки
+                // ===============================
+                console.log("ROBOT module says - Функция покупки")
+                const postOrder = await require('./invest.api/ordersService.api.service').postOrder({
+                    lot: lastSocialLot,
+                    direction: "1",
+                    account,
+                    orderType: "2"
+                })
+                if (postOrder) {
+                    console.log('Функция покупки вернула это')
+                    console.log(postOrder)
+                    console.log('Система говорит => Покуплено, ура!' + lastSocialLot?.ticker)
+                }
+
+            } else {
+                console.log("ROBOT module says - Не хватает денег на покупку")
             }
         }
     }
-    return "END ROBOT"
+    return "ROBOT module says - END ROBOT"
 }
 

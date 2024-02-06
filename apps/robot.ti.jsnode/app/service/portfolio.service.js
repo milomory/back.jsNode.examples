@@ -1,23 +1,37 @@
+const {delay} = require("./delay.service");
 
 exports.getInstrumentByPortfolio = async (account) => {
 
     // ===============================
     // Пихаем этот ИД и карренси, чтобы потом посмотреть, что там внутри вообще есть рублевого
     // ===============================
-    const portfolio = await require('./invest.api/operationsService/getPortfolio').get({
+    const portfolio = await require('./invest.api/operationsService.api.service').getPortfolio({
         accountId:  account?.id,
         currency:   'RUB'
     })
-    //console.log(portfolio)
+
+    // const portfolio = await require('./invest.api/operationsService/getPortfolio').get({
+    //     accountId:  account?.id,
+    //     currency:   'RUB'
+    // })
+    console.log("Portfolio Service - portfolio")
+    // console.log(portfolio)
 
     const portfolioPositionsArr = []
     for (let [i, position] of portfolio?.positions?.entries()) {
         if (position?.instrumentType === "share") {
-            const findInstrument = await require('./invest.api/instrumentsService/findInstrument').get({
+
+            const findInstrument = await require('./invest.api/instrumentsService.api.service').findInstrument({
                 "query": position?.positionUid,
                 "instrumentKind": "INSTRUMENT_TYPE_SHARE",
                 "apiTradeAvailableFlag": true
             })
+
+            // const findInstrument = await require('./invest.api/instrumentsService/findInstrument').get({
+            //     "query": position?.positionUid,
+            //     "instrumentKind": "INSTRUMENT_TYPE_SHARE",
+            //     "apiTradeAvailableFlag": true
+            // })
             // console.log("portfolio.service - findInstrument")
             // console.log(findInstrument)
             portfolioPositionsArr.push(
@@ -36,10 +50,16 @@ exports.getInstrumentByPortfolio = async (account) => {
 }
 
 exports.getAmountByPortfolio = async (account) => {
-    const portfolio = await require('./invest.api/operationsService/getPortfolio').get({
+
+    const portfolio = await require('./invest.api/operationsService.api.service').getPortfolio({
         accountId:  account?.id,
         currency:   'RUB'
     })
+
+    // const portfolio = await require('./invest.api/operationsService/getPortfolio').get({
+    //     accountId:  account?.id,
+    //     currency:   'RUB'
+    // })
     // ===============================
     // Достаем количество свободного бабла в рублях
     // ===============================

@@ -24,14 +24,9 @@ exports.common = async () => {
             await require('./db/count.service').saveCount(1)
 
             for (let profile of await getActivityProfiles(profiles)) {
-                await require('./social.service').getSocialInstruments([profile])
-                // const lastSocialLots = await require('./social.service').getSocialInstruments([profile])
-                // console.log(lastSocialLots)
-                // const robot = await require('./robot.service').run(lastSocialLots)
-                // console.log(robot)
+                console.log("Social service START")
+                console.log(await require('./social.service').getSocialInstruments([profile]))
             }
-
-            // await require('./social.service').getSocialInstruments(profiles)
 
             await require('./db/count.service').saveCount(0)
         }

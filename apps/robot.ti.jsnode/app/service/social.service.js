@@ -6,10 +6,10 @@ exports.getSocialInstruments = async (profiles) => {
     if (profiles && psid) {
 
         const currentDate = new Date().toISOString().slice(0, 10)
-        // const currentDate = "2024-01-31"
+        // const currentDate = "2024-02-05"
         console.log("")
-        console.log("Сегодня: " + currentDate)
-        console.log("Время: " + new Date().toTimeString())
+        console.log("Social service module - Сегодня: " + currentDate)
+        console.log("Social service module - Время: " + new Date().toTimeString())
         console.log("")
 
         // ===============================
@@ -25,7 +25,7 @@ exports.getSocialInstruments = async (profiles) => {
                 await require("./delay.service").delay(5, 10)
 
                 console.log("")
-                console.log("Профиль № " + i + " (profile): " + profile.name)
+                console.log("Social service module - Профиль № " + i + " (profile): " + profile.name)
                 console.log("")
 
                 // ===============================
@@ -38,7 +38,9 @@ exports.getSocialInstruments = async (profiles) => {
                 })
 
                 if (orderList) {
-                    console.log('orderList is not empty')
+                    console.log('Social service module - orderList is not empty')
+                    // console.log(orderList)
+
                     // ===============================
                     // Выбираем только сегодняшние оредеры
                     // ===============================
@@ -68,7 +70,7 @@ exports.getSocialInstruments = async (profiles) => {
                                 // Выводим все акшины по И-тому одеру, но т.к. у нас лимит стоит 1,
                                 // то мы получаем сразу последний
                                 // ===============================
-                                console.log("Смотрим последний экшин по " + i + "-тому одер-листу. " +
+                                console.log("Social service module - Смотрим последний экшин по " + i + "-тому одер-листу. " +
                                     "Профиль " + profile?.name + ". " +
                                     "classCode: " + order?.classCode + ". " +
                                     "type: " + order?.type + ". " +
@@ -79,11 +81,12 @@ exports.getSocialInstruments = async (profiles) => {
                                 const sharesBy = await require('./invest.api/instrumentsService/sharesBy.nsi.service').getSharesBy(order.ticker)
 
                                 if (sharesBy) {
-                                    console.log("START ROBOT")
+                                    console.log("Social service module - START ROBOT")
                                     console.log(await require('./robot.service').run({
                                         figi:                   sharesBy.figi,              // sharesBy
                                         ticker:                 order.ticker,
                                         classCode:              order.classCode,
+                                        lot:                    sharesBy.lot,
                                         name:                   sharesBy.name,
                                         exchange:               sharesBy.exchange,
                                         uid:                    sharesBy.uid,
@@ -98,11 +101,13 @@ exports.getSocialInstruments = async (profiles) => {
                             }
                         }
                     }
+                } else {
+                    console.log("Social service module - orderList is empty")
                 }
             }
         }
     }
 
-    //return lastSocialLots
+    return "Social service module - Social service END"
 
 }

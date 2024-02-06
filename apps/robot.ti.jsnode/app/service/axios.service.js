@@ -4,13 +4,13 @@ const env = require('../env').getENV()
 exports.request = async (method, url, headers, data) => {
 
     // Удалить
-    if (!headers) {
-        headers = {
-            'accept': 'application/json',
-            'Authorization': `Bearer ${env.INVEST_TOKEN}`,
-            'Content-Type': 'application/json'
-        }
-    }
+    // if (!headers) {
+    //     headers = {
+    //         'accept': 'application/json',
+    //         'Authorization': `Bearer ${env.INVEST_TOKEN}`,
+    //         'Content-Type': 'application/json'
+    //     }
+    // }
     //----
 
 

@@ -9,51 +9,75 @@ const Trades = sequelize.define('trades', {
     },
     figi: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
+    },
+    ticker: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    classCode: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    name: {
+        type: DataTypes.STRING,
+        allowNull: true,
     },
     quantity: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    lot: {
+        type: DataTypes.STRING,
+        allowNull: true,
     },
     price_currency: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     price_units: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
+        type: DataTypes.STRING,
+        allowNull: true,
     },
     price_nano: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
+        type: DataTypes.STRING,
+        allowNull: true,
     },
     direction: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     accountId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
+        type: DataTypes.STRING,
+        allowNull: true,
     },
     orderType: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     orderId: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     tradeDateTime:{
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     instrumentId: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
+    },
+    uid: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    positionUid: {
+        type: DataTypes.STRING,
+        allowNull: true,
     },
     status: {
         type: DataTypes.BOOLEAN,
-        allowNull: false,
+        allowNull: true,
     }
 });
 
