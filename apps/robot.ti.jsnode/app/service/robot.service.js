@@ -1,8 +1,8 @@
 
 exports.run = async (lastSocialLot) => {
 
-    console.log("ROBOT module says - lastSocialLot:")
-    console.log(lastSocialLot)
+    // console.log("ROBOT module says - lastSocialLot:")
+    // console.log(lastSocialLot)
 
     // ===============================
     // Смотрим выбранный мой аккаунт, созданный для этого всего
@@ -53,11 +53,11 @@ exports.run = async (lastSocialLot) => {
                     orderType: "2"
                 })
                 if (postOrder) {
-                    console.log('Функция покупки вернула это')
-                    console.log(postOrder)
+                    console.log("ROBOT module says - postOrder is not empty")
                     console.log('Система говорит => Покуплено, ура!' + lastSocialLot?.ticker)
+                } else {
+                    console.log("ROBOT module says - postOrder is empty")
                 }
-
             } else {
                 console.log("ROBOT module says - Не хватает денег на покупку")
             }

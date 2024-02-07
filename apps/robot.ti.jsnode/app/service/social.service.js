@@ -70,7 +70,7 @@ exports.getSocialInstruments = async (profiles) => {
                                 // Выводим все акшины по И-тому одеру, но т.к. у нас лимит стоит 1,
                                 // то мы получаем сразу последний
                                 // ===============================
-                                console.log("Social service module - Смотрим последний экшин по " + i + "-тому одер-листу. " +
+                                console.log("Social service module - Смотрим последний экшин по " + i + "-му одер-листу. " +
                                     "Профиль " + profile?.name + ". " +
                                     "classCode: " + order?.classCode + ". " +
                                     "type: " + order?.type + ". " +
@@ -78,7 +78,7 @@ exports.getSocialInstruments = async (profiles) => {
                                     "Action: " + actions[0]?.action + ". " +
                                     "Cost: " + actions[0]?.averagePrice)
 
-                                const sharesBy = await require('./invest.api/instrumentsService/sharesBy.nsi.service').getSharesBy(order.ticker)
+                                const sharesBy = await require('./invest.api/nsi/sharesBy.nsi.service').getSharesBy(order.ticker)
 
                                 if (sharesBy) {
                                     console.log("Social service module - START ROBOT")

@@ -70,7 +70,7 @@ const lastLotPriceTransform = (number, length) => {
     if (number && length) {
         let parts = number.toString().split('.');
         let concatenatedLastLotPrice = priceTransform(parts[0], parts[1])
-        let concatenatedLastLotPriceLength = concatenatedLastLotPrice.length
+        let concatenatedLastLotPriceLength = concatenatedLastLotPrice?.length
         let postfixNumber = length - concatenatedLastLotPriceLength
         let zeroString = "0".repeat(postfixNumber);
         return parseInt("" + concatenatedLastLotPrice + zeroString)
@@ -144,8 +144,10 @@ exports.postOrder = async (data) => {
                     if (concatenatedOrderBookPrice > concatenatedTradesPrice) {
                         console.log("OrdersService module - Запускаем активашку, цена в стакане выше закупочной.")
                         await activationPostOrder(data) // Надо проверить, что в дате тоже приходит СЕЛЛ
+                        return 1
                     } else {
                         console.log("OrdersService module - Цена в стакане ниже закупочной. Может быть когда-нибудь буду создавать лимитную заявку...")
+                        return 0
                     }
                 }
 
@@ -158,6 +160,10 @@ exports.postOrder = async (data) => {
                 if (data.direction === "1") {
                     console.log("OrdersService module - Запускаем активашку")
                     await activationPostOrder(data) // Надо проверить, что в дате тоже приходит БУЙ
+                    return 1
+                } else {
+                    console.log("OrdersService module - В эту ветку я не должен никогда приходить...")
+                    return 0
                 }
             }
 
@@ -172,11 +178,12 @@ exports.postOrder = async (data) => {
             if (data.direction === "1") {
                 console.log("OrdersService module - Запускаем активашку")
                 await activationPostOrder(data) // Надо проверить, что в дате тоже приходит БУЙ
+                return 1
+            } else {
+                console.log("OrdersService module - В эту ветку я не должен никогда приходить...")
+                return 0
             }
         }
     }
-
-    return 0
-
 }
 

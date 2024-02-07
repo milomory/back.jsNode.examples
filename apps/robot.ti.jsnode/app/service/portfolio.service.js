@@ -10,10 +10,6 @@ exports.getInstrumentByPortfolio = async (account) => {
         currency:   'RUB'
     })
 
-    // const portfolio = await require('./invest.api/operationsService/getPortfolio').get({
-    //     accountId:  account?.id,
-    //     currency:   'RUB'
-    // })
     console.log("Portfolio Service - portfolio")
     // console.log(portfolio)
 
@@ -27,23 +23,21 @@ exports.getInstrumentByPortfolio = async (account) => {
                 "apiTradeAvailableFlag": true
             })
 
-            // const findInstrument = await require('./invest.api/instrumentsService/findInstrument').get({
-            //     "query": position?.positionUid,
-            //     "instrumentKind": "INSTRUMENT_TYPE_SHARE",
-            //     "apiTradeAvailableFlag": true
-            // })
-            // console.log("portfolio.service - findInstrument")
-            // console.log(findInstrument)
-            portfolioPositionsArr.push(
-                {
-                    figi:           findInstrument?.instruments[0]?.figi,
-                    ticker:         findInstrument?.instruments[0]?.ticker,
-                    classCode:      findInstrument?.instruments[0]?.classCode,
-                    instrumentType: findInstrument?.instruments[0]?.instrumentType,
-                    uid:            findInstrument?.instruments[0]?.uid,
-                    positionUid:    findInstrument?.instruments[0]?.positionUid
-                }
-            )
+            if (findInstrument) {
+                console.log("portfolio.service - findInstrument[" + i + "] is not empty. ticker:" + findInstrument?.instruments[0]?.ticker)
+                // console.log(findInstrument)
+
+                portfolioPositionsArr.push(
+                    {
+                        figi:           findInstrument?.instruments[0]?.figi,
+                        ticker:         findInstrument?.instruments[0]?.ticker,
+                        classCode:      findInstrument?.instruments[0]?.classCode,
+                        instrumentType: findInstrument?.instruments[0]?.instrumentType,
+                        uid:            findInstrument?.instruments[0]?.uid,
+                        positionUid:    findInstrument?.instruments[0]?.positionUid
+                    }
+                )
+            }
         }
     }
     return portfolioPositionsArr

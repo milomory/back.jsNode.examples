@@ -19,7 +19,7 @@ const getActivityProfiles = async (profiles) => {
 exports.common = async () => {
     setInterval(async function () {
 
-        const profiles = await require('../nsi/profiles.nsi').getProfile();
+        const profiles = await require('../nsi/profiles.nsi').getProfiles();
         if (await require('./db/count.service').getCountStatus() === 0 && profiles) {
             await require('./db/count.service').saveCount(1)
 

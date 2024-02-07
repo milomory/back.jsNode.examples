@@ -1,5 +1,5 @@
 
-exports.getProfile = async () => {
+exports.getProfiles = async () => {
     return ([
         {
             name: 'mil',
