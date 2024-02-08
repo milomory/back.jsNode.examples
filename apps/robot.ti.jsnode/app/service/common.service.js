@@ -24,7 +24,7 @@ exports.common = async () => {
             await require('./db/count.service').saveCount(1)
 
             for (let profile of await getActivityProfiles(profiles)) {
-                console.log("Social service START")
+                console.log("COMMON SERVICE: STARTING SOCIAL SERVICE...")
                 console.log(await require('./social.service').getSocialInstruments([profile]))
             }
 

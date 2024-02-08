@@ -1,16 +1,18 @@
 
 exports.getSocialInstruments = async (profiles) => {
 
+    console.log("SOCIAL SERVICE STARTING...")
+
     const psid = await require('./db/psid.service').getPsid()
 
     if (profiles && psid) {
 
         const currentDate = new Date().toISOString().slice(0, 10)
-        // const currentDate = "2024-02-05"
-        console.log("")
-        console.log("Social service module - Сегодня: " + currentDate)
-        console.log("Social service module - Время: " + new Date().toTimeString())
-        console.log("")
+        //const currentDate = "2024-02-05"
+        console.log("SOCIAL SERVICE")
+        console.log("SOCIAL SERVICE: Today: " + currentDate)
+        console.log("SOCIAL SERVICE: Time: " + new Date().toTimeString())
+        console.log("SOCIAL SERVICE")
 
         // ===============================
         // Цикл обхода всех профилей
@@ -24,9 +26,10 @@ exports.getSocialInstruments = async (profiles) => {
                 // ===============================
                 await require("./delay.service").delay(5, 10)
 
-                console.log("")
-                console.log("Social service module - Профиль № " + i + " (profile): " + profile.name)
-                console.log("")
+                console.log("SOCIAL SERVICE")
+                console.log("SOCIAL SERVICE: Profile № " + i)
+                console.log("SOCIAL SERVICE: Name: " + profile.name)
+                console.log("SOCIAL SERVICE")
 
                 // ===============================
                 // Тянем весь ордерЛист
@@ -34,12 +37,13 @@ exports.getSocialInstruments = async (profiles) => {
                 const orderList = await require('./instruments.social.service').getInstrumentList({
                     psid,
                     profileUid: profile.uid,
-                    limit:      100 // очень важный параметр, тиньков будет отбивать
+                    limit:      100, // очень важный параметр, тиньков будет отбивать
+                    currentDate
                 })
 
-                if (orderList) {
-                    console.log('Social service module - orderList is not empty')
-                    // console.log(orderList)
+                if (orderList.length > 0) {
+                    console.log('SOCIAL SERVICE: -orderList- variable is not empty')
+                    console.log(orderList)
 
                     // ===============================
                     // Выбираем только сегодняшние оредеры
@@ -70,7 +74,7 @@ exports.getSocialInstruments = async (profiles) => {
                                 // Выводим все акшины по И-тому одеру, но т.к. у нас лимит стоит 1,
                                 // то мы получаем сразу последний
                                 // ===============================
-                                console.log("Social service module - Смотрим последний экшин по " + i + "-му одер-листу. " +
+                                console.log("SOCIAL SERVICE: Looking last Action by " + i + "'s orderList. " +
                                     "Профиль " + profile?.name + ". " +
                                     "classCode: " + order?.classCode + ". " +
                                     "type: " + order?.type + ". " +
@@ -81,7 +85,7 @@ exports.getSocialInstruments = async (profiles) => {
                                 const sharesBy = await require('./invest.api/nsi/sharesBy.nsi.service').getSharesBy(order.ticker)
 
                                 if (sharesBy) {
-                                    console.log("Social service module - START ROBOT")
+                                    console.log("SOCIAL SERVICE: STARTING ROBOT SERVICE")
                                     console.log(await require('./robot.service').run({
                                         figi:                   sharesBy.figi,              // sharesBy
                                         ticker:                 order.ticker,
@@ -102,12 +106,12 @@ exports.getSocialInstruments = async (profiles) => {
                         }
                     }
                 } else {
-                    console.log("Social service module - orderList is empty")
+                    console.log("SOCIAL SERVICE: -orderList- variable is empty")
                 }
             }
         }
     }
 
-    return "Social service module - Social service END"
+    return "SOCIAL SERVICE: SOCIAL SERVICE is END"
 
 }

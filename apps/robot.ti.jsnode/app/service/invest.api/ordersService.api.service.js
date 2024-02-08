@@ -179,9 +179,10 @@ exports.postOrder = async (data) => {
                 console.log("OrdersService module - Запускаем активашку")
                 await activationPostOrder(data) // Надо проверить, что в дате тоже приходит БУЙ
                 return 1
-            } else {
-                console.log("OrdersService module - В эту ветку я не должен никогда приходить...")
-                return 0
+            } else { // data.direction === "0"
+                console.log("OrdersService module - Давай временно продавать даже в минус, если нет записи в базе...")
+                await activationPostOrder(data) // Надо проверить, что в дате тоже приходит БУЙ
+                return 1
             }
         }
     }
