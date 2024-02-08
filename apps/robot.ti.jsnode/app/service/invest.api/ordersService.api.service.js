@@ -54,16 +54,28 @@ const activationPostOrder = async (data) => {
     }
 }
 
-const priceTransform = (units, nano) => {
-    if (units && nano) {
-        let concatenatedPrice = '' + units + nano;
-        let concatenatedPriceSlice = parseInt(concatenatedPrice).toString().slice(0, 9).toString()
-        if (concatenatedPriceSlice.length < 9) {
-            let postfixNumber = "0".repeat(9 - concatenatedPriceSlice.length)
-            concatenatedPriceSlice = "" + concatenatedPriceSlice.toString() + postfixNumber.toString()
-        }
-        return parseInt(concatenatedPriceSlice).toString()
+const priceTransform = async (units, nano) => {
+
+    let str = '' + units + nano
+    // console.log("str: " + str)
+
+    // Убираем начальные нули с помощью регулярного выражения
+    let trimmedStr = str.replace(/^0+/, '');
+    // console.log("trimmedStr: " + trimmedStr)
+
+    // Вычисляем, сколько нулей нужно добавить в конец строки
+    let zerosNeeded = 9 - trimmedStr.length;
+    // console.log("zerosNeeded: " + zerosNeeded)
+
+    if (zerosNeeded > 0) {
+        // Добавляем нули в конец строки, если это необходимо
+        trimmedStr += '0'.repeat(zerosNeeded);
     }
+
+    // console.log("returning... trimmedStrSlice: " + trimmedStr.slice(0, 9))
+
+    return trimmedStr.slice(0, 9)
+
 }
 
 const lastLotPriceTransform = (number, length) => {
@@ -73,114 +85,117 @@ const lastLotPriceTransform = (number, length) => {
         let concatenatedLastLotPriceLength = concatenatedLastLotPrice?.length
         let postfixNumber = length - concatenatedLastLotPriceLength
         let zeroString = "0".repeat(postfixNumber);
-        return parseInt("" + concatenatedLastLotPrice + zeroString)
+        return "" + concatenatedLastLotPrice + zeroString
     }
 }
 
 
 exports.postOrder = async (data) => {
-    console.log("OrdersService module - Что мы собираемся делать с этим?")
-    console.log("OrdersService module - data")
-    console.log(data)
-    console.log("OrdersService module - data.direction")
-    console.log(data.direction)
+    // console.log("OrdersService module - Что мы собираемся делать с этим?")
+    // console.log("OrdersService module - data")
+    // console.log(data)
+    // console.log("OrdersService module - data.direction")
+    // console.log(data.direction)
 
     // Достаем Стакан по фиги и инструменту
     const OrderBook = await require("./marketDataService.api.service")
         .getOrderBook({figi: data.lot.figi, depth: 1, instrumentId: data.lot.uid})
     console.log("OrdersService module - OrderBook - Достаем Стакан по фиги и инструменту")
-    console.log(OrderBook)
+    // console.log(OrderBook)
 
-    console.log("OrdersService module - OrderBook.asks.length - смотрим есть ли что в стакане. Нужно для проверки существования стакана")
-    console.log(OrderBook?.asks?.length)
+    console.log("ORDERS-SERVICE API SERVICE: OrderBook.asks.length - смотрим есть ли что в стакане. Нужно для проверки существования стакана")
+    // console.log("ORDERS-SERVICE API SERVICE: OrderBook?.bids?.length")
+    // console.log(OrderBook?.bids?.length)
+    // console.log("ORDERS-SERVICE API SERVICE: OrderBook?.asks?.length")
+    // console.log(OrderBook?.asks?.length)
 
-    if (OrderBook?.asks?.length !== 0) {
+    if (OrderBook?.bids?.length !== 0 || OrderBook?.asks?.length !== 0) {
         // Достаем последнюю ТРУШНУЮ запись из базы и смотрим InstrumentId
         const lastTradeByInstrumentId = await require("../db/trades.service").getLastTradeByInstrumentId(data.lot.uid)
-        console.log("OrdersService module - lastTradeByInstrumentId - Достаем последнюю ТРУШНУЮ запись из базы и смотрим InstrumentId")
+        console.log("ORDERS-SERVICE API SERVICE: lastTradeByInstrumentId - Достаем последнюю ТРУШНУЮ запись из базы и смотрим InstrumentId")
 
         if (lastTradeByInstrumentId) { // Если запись в базе есть
-            console.log("OrdersService module - lastTradeByInstrumentId - В базе имеется запись о InstrumentId")
-            console.log(lastTradeByInstrumentId)
+            console.log("ORDERS-SERVICE API SERVICE: lastTradeByInstrumentId - В базе имеется запись о InstrumentId")
+            // console.log(lastTradeByInstrumentId)
 
-            console.log("OrdersService module - lastTradeByInstrumentId.direction")
-            console.log(lastTradeByInstrumentId.direction)
+            // console.log("ORDERS-SERVICE API SERVICE: lastTradeByInstrumentId.direction")
+            // console.log(lastTradeByInstrumentId.direction)
 
             if (lastTradeByInstrumentId.direction === "1") {
-                console.log("OrdersService module - Пытаемся продать, т.к. уже есть ТРУШНАЯ запись о покупке (Дирекшион 1), но смотрим выросла ли цена")
+                console.log("ORDERS-SERVICE API SERVICE: Пытаемся продать, т.к. уже есть ТРУШНАЯ запись о покупке (Дирекшион 1), но смотрим выросла ли цена")
 
-                const OrderBookPriceUnits = OrderBook?.lastPrice?.units // OrderBook units //lastPrice & closePrice
-                console.log("OrdersService module - OrderBook Price Units")
-                console.log(OrderBookPriceUnits)
+                const OrderBookPriceUnits = OrderBook?.bids[0]?.price?.units // OrderBook units
+                // console.log("ORDERS-SERVICE API SERVICE: OrderBook Price Units")
+                // console.log(OrderBookPriceUnits)
 
-                const OrderBookPriceNano = OrderBook?.lastPrice?.nano // OrderBook nano //lastPrice & closePrice
-                console.log("OrdersService module - OrderBook Price Nano")
-                console.log(OrderBookPriceNano)
+                const OrderBookPriceNano = OrderBook?.bids[0]?.price?.nano // OrderBook nano
+                // console.log("ORDERS-SERVICE API SERVICE: OrderBook Price Nano")
+                // console.log(OrderBookPriceNano)
 
                 const findTradeByInstrumentIdPriceUnits = lastTradeByInstrumentId?.price_units
-                console.log("OrdersService module - find TradeByInstrumentId PriceUnits");
-                console.log(findTradeByInstrumentIdPriceUnits); // My units
+                // console.log("ORDERS-SERVICE API SERVICE: find TradeByInstrumentId PriceUnits");
+                // console.log(findTradeByInstrumentIdPriceUnits); // My units
 
                 const findTradeByInstrumentIdPriceNano = lastTradeByInstrumentId?.price_nano // My nano
-                console.log("OrdersService module - findTradeByInstrumentIdPriceNano")
-                console.log(findTradeByInstrumentIdPriceNano) // My nano
+                // console.log("ORDERS-SERVICE API SERVICE: findTradeByInstrumentIdPriceNano")
+                // console.log(findTradeByInstrumentIdPriceNano) // My nano
 
-                // concatenated & slice -> 0-8
-                const concatenatedOrderBookPrice = priceTransform(OrderBookPriceUnits, OrderBookPriceNano)
-                console.log("OrdersService module - concatenatedOrderBookPrice (slice -> 0-9)")
-                console.log(concatenatedOrderBookPrice) // OrderBook Price
-                // concatenated & slice -> 0-8
-                const concatenatedTradesPrice = priceTransform(findTradeByInstrumentIdPriceUnits, findTradeByInstrumentIdPriceNano)
-                console.log("OrdersService module - concatenatedTradesPrice (slice -> 0-9)")
-                console.log(concatenatedTradesPrice) // My Price
+                // concatenated & slice -> 0-9
+                const concatenatedOrderBookPrice = await priceTransform(OrderBookPriceUnits, OrderBookPriceNano)
+                console.log("ORDERS-SERVICE API SERVICE: concatenatedOrderBookPrice (slice -> 0-9)")
+                console.log("( " + concatenatedOrderBookPrice + " )") // OrderBook Price
+                // concatenated & slice -> 0-9
+                const concatenatedTradesPrice = await priceTransform(findTradeByInstrumentIdPriceUnits, findTradeByInstrumentIdPriceNano)
+                console.log("ORDERS-SERVICE API SERVICE: concatenatedTradesPrice (slice -> 0-9)")
+                console.log("( " + concatenatedTradesPrice + " )") // My Price
 
-                const concatenatedLastSocialLotPrice = lastLotPriceTransform(data.lot.averagePrice, concatenatedTradesPrice.toString().length)
-                console.log("OrdersService module - concatenatedLastSocialLotPrice")
-                console.log(concatenatedLastSocialLotPrice) // Last Lot Price
+                // const concatenatedLastSocialLotPrice = lastLotPriceTransform(data.lot.averagePrice, concatenatedTradesPrice.toString().length)
+                // console.log("OrdersService module - concatenatedLastSocialLotPrice")
+                // console.log(concatenatedLastSocialLotPrice) // Last Lot Price
 
-                console.log("OrdersService module - Проверяем data.direction")
+                console.log("ORDERS-SERVICE API SERVICE: Проверяем data.direction")
                 console.log(data.direction)
                 if (data.direction === "2") {
                     if (concatenatedOrderBookPrice > concatenatedTradesPrice) {
-                        console.log("OrdersService module - Запускаем активашку, цена в стакане выше закупочной.")
+                        console.log("ORDERS-SERVICE API SERVICE: Запускаем активашку, цена в стакане выше закупочной.")
                         await activationPostOrder(data) // Надо проверить, что в дате тоже приходит СЕЛЛ
                         return 1
                     } else {
-                        console.log("OrdersService module - Цена в стакане ниже закупочной. Может быть когда-нибудь буду создавать лимитную заявку...")
+                        console.log("ORDERS-SERVICE API SERVICE: Цена в стакане ниже закупочной. Может быть когда-нибудь буду создавать лимитную заявку...")
                         return 0
                     }
                 }
 
             } else { // lastTradeByInstrumentId.direction === "2"
-                console.log("OrdersService module - Покупаем, т.к. уже есть запись о продаже")
-                console.log("OrdersService module - Т.к. последняя запись со статусом ТРУ имеет Дирекшион 2, то надо покупать!")
+                console.log("ORDERS-SERVICE API SERVICE: Покупаем, т.к. уже есть запись о продаже")
+                console.log("ORDERS-SERVICE API SERVICE: Т.к. последняя запись со статусом ТРУ имеет Дирекшион 2, то надо покупать!")
 
-                console.log("OrdersService module - Проверяем data.direction")
+                console.log("ORDERS-SERVICE API SERVICE: Проверяем data.direction")
                 console.log(data.direction)
                 if (data.direction === "1") {
-                    console.log("OrdersService module - Запускаем активашку")
+                    console.log("ORDERS-SERVICE API SERVICE: Запускаем активашку")
                     await activationPostOrder(data) // Надо проверить, что в дате тоже приходит БУЙ
                     return 1
                 } else {
-                    console.log("OrdersService module - В эту ветку я не должен никогда приходить...")
+                    console.log("ORDERS-SERVICE API SERVICE: В эту ветку я не должен никогда приходить...")
                     return 0
                 }
             }
 
         } else { // Если записи в базе нет
-            console.log("OrdersService module - В базе записи нет")
+            console.log("ORDERS-SERVICE API SERVICE: В базе записи нет")
             // Если в базе записи нет, то делаем как делаем, но по-хорошему бы только покупать.
             // ...
-            console.log("OrdersService module - Пока только покупаем")
+            console.log("ORDERS-SERVICE API SERVICE: Пока только покупаем")
 
-            console.log("OrdersService module - Проверяем data.direction")
+            console.log("ORDERS-SERVICE API SERVICE: Проверяем data.direction")
             console.log(data.direction)
             if (data.direction === "1") {
-                console.log("OrdersService module - Запускаем активашку")
+                console.log("ORDERS-SERVICE API SERVICE: Запускаем активашку")
                 await activationPostOrder(data) // Надо проверить, что в дате тоже приходит БУЙ
                 return 1
             } else { // data.direction === "0"
-                console.log("OrdersService module - Давай временно продавать даже в минус, если нет записи в базе...")
+                console.log("ORDERS-SERVICE API SERVICE: Давай временно продавать даже в минус, если нет записи в базе...")
                 await activationPostOrder(data) // Надо проверить, что в дате тоже приходит БУЙ
                 return 1
             }

@@ -35,9 +35,9 @@ exports.getSocialInstruments = async (profile) => {
                 currentDate
             })
 
-            if (orderList.length > 0) {
+            if (orderList?.length > 0) {
                 console.log('SOCIAL SERVICE: -orderList- variable is not empty')
-                console.log(orderList)
+                // console.log(orderList)
 
                 // ===============================
                 // Выбираем ордеры только сегодняшние, только акции и только рублевые

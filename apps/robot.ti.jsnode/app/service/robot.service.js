@@ -1,6 +1,8 @@
 
 exports.run = async (lastSocialLot) => {
 
+    console.log("ROBOT SERVICE STARTING...")
+
     // console.log("ROBOT module says - lastSocialLot:")
     // console.log(lastSocialLot)
 
@@ -18,13 +20,13 @@ exports.run = async (lastSocialLot) => {
     const amountByPortfolio = await require('./portfolio.service').getAmountByPortfolio(account)
 
     if (instrumentByPortfolio.find(obj => obj.positionUid === lastSocialLot.positionUid)) {
-        console.log("ROBOT module says - " + lastSocialLot.ticker + " В портфеле такая штука есть, посмотрим на ее акшин... " + lastSocialLot.action)
+        console.log("ROBOT SERVICE: " + lastSocialLot.ticker + " В портфеле такая штука есть, посмотрим на ее акшин... " + lastSocialLot.action)
 
         if (lastSocialLot.action === 'sell') {
             // ===============================
             // Функция продажи
             // ===============================
-            console.log("ROBOT module says - Функция продажи")
+            console.log("ROBOT SERVICE: Функция продажи")
             const postOrder = await require('./invest.api/ordersService.api.service').postOrder({
                 lot: lastSocialLot,
                 direction: "2",
@@ -32,20 +34,20 @@ exports.run = async (lastSocialLot) => {
                 orderType: "2"
             })
             if (postOrder) {
-                console.log('ROBOT module says - Функция продажи вернула это:')
+                console.log('ROBOT SERVICE: Функция продажи вернула это:')
                 console.log(postOrder)
-                console.log('ROBOT module says - Система говорит => Продано, ура!' + lastSocialLot?.ticker)
+                console.log('ROBOT SERVICE: Система говорит => Продано, ура! ticker: ' + lastSocialLot?.ticker + ", name: " + lastSocialLot?.name)
             }
         }
     } else {
-        console.log("ROBOT module says - " + lastSocialLot.ticker + " В портфеле такой штуки нет, посмотрим на ее акшин...  " + lastSocialLot.action + " ")
+        console.log("ROBOT SERVICE: " + lastSocialLot.ticker + " В портфеле такой штуки нет, посмотрим на ее акшин...  " + lastSocialLot.action + " ")
 
         if (lastSocialLot?.action === 'buy') {
             if (lastSocialLot?.averagePrice * lastSocialLot?.lot < amountByPortfolio?.totalAmountCurrencies?.units) {
                 // ===============================
                 // Функция покупки
                 // ===============================
-                console.log("ROBOT module says - Функция покупки")
+                console.log("ROBOT SERVICE: Функция покупки")
                 const postOrder = await require('./invest.api/ordersService.api.service').postOrder({
                     lot: lastSocialLot,
                     direction: "1",
@@ -53,16 +55,16 @@ exports.run = async (lastSocialLot) => {
                     orderType: "2"
                 })
                 if (postOrder) {
-                    console.log("ROBOT module says - postOrder is not empty")
-                    console.log('Система говорит => Покуплено, ура!' + lastSocialLot?.ticker)
+                    console.log("ROBOT SERVICE: postOrder is not empty")
+                    console.log('ROBOT SERVICE: Куплено, ура! ticker: ' + lastSocialLot?.ticker + ", name: " + lastSocialLot?.name)
                 } else {
-                    console.log("ROBOT module says - postOrder is empty")
+                    console.log("ROBOT SERVICE: postOrder is empty")
                 }
             } else {
-                console.log("ROBOT module says - Не хватает денег на покупку")
+                console.log("ROBOT SERVICE: Не хватает денег на покупку")
             }
         }
     }
-    return "ROBOT module says - END ROBOT"
+    return "ROBOT SERVICE: END ROBOT SERVICE"
 }
 
